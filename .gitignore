@@ -1,0 +1,10 @@
+*.vscode
+*.history
+*.pyc
+*Binaries
+*Intermediate
+*Saved
+git_*.bat
+NePythonBinding/Tools/temp
+NePythonGenerator/Source/NePythonGeneratorCSharp/obj
+NePythonGenerator/Source/NePythonGeneratorCSharp/NePythonGeneratorCSharp.ubtplugin.csproj.props
