@@ -1,0 +1,118 @@
+{
+	"parent_class": "/Script/YellowPaint.LogicFlowDriverInstance",
+	"class_name": "NewLogicFlowAsset",
+	"class_path": "/Game/NewLogicFlowAsset.NewLogicFlowAsset_C",
+	"properties":
+	{
+	},
+	"new_variables":
+	{
+	},
+	"event_graphs": [
+		{
+			"guid": "A0D152AD4B8EF76F8A3E4F803E73AE45",
+			"nodes": [
+				{
+					"guid": "A2D9585E4135C2C2946BA4885C9F44EE",
+					"type": "EdYellowPaintNode",
+					"pins": [
+						{
+							"guid": "F065F70B4C7AACD85B0C56BF6B1B943D",
+							"name": "Out",
+							"type":
+							{
+								"type": "exec"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "AB46105B4EFE5A008ECDD6BBF8CE89CC",
+							"name": "In",
+							"type":
+							{
+								"type": "exec"
+							},
+							"direction": 0,
+							"value": null,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "0FFA11794E80A512997752BF512EB220",
+							"name": "Int",
+							"type":
+							{
+								"type": "int"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "DBE1C4BC406D0BCECC450B888A4C57A8",
+							"name": "bool",
+							"type":
+							{
+								"type": "bool"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "543E1AFD4170ADF8EFF88C8A3B34E5C2",
+							"name": "Int",
+							"type":
+							{
+								"type": "int"
+							},
+							"direction": 0,
+							"value": 0,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "14E004484E5D1D151C7547BBF641495E",
+							"name": "bool",
+							"type":
+							{
+								"type": "bool"
+							},
+							"direction": 0,
+							"value": false,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "9FF687214F860062E92E1B8C2A955B55",
+							"name": "Wild",
+							"type":
+							{
+								"type": "wildcard"
+							},
+							"direction": 0,
+							"value": "",
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "2FAD70124C58D4169838E5BBC960FA4A",
+							"name": "Wild",
+							"type":
+							{
+								"type": "wildcard"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						}
+					]
+				}
+			],
+			"connections": []
+		}
+	],
+	"func_graphs": []
+}

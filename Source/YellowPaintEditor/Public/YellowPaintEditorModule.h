@@ -2,9 +2,10 @@
 
 #include <functional>
 // #include "LogicGraphEditor.h"
-#include "FYellowPaintGraphEditor.h"
-#include "UYellowPaintGraph.h"
+#include "Asset/FYellowPaintGraphEditor.h"
+#include "LogicFlowAsset.h"
 #include "Modules/ModuleManager.h"
+#include "Graph/Compile/YellowPaintCompiler.h"
 
 
 class FYellowPaintGraphNodeFactory;
@@ -25,7 +26,9 @@ public:
 	static TSharedRef<FExtender> OnExtendSkelMeshWithDNASelectionMenu(const TArray<FAssetData>& SelectedAssets);
 	static void CreateDnaActionsSubMenu(FMenuBuilder& MenuBuilder, const TArray<FAssetData> SelectedAssets);
 	
-	void CreateEditor(UYellowPaintGraph *Blueprint, TSharedPtr<class IToolkitHost> EditWithinLevelEditor, UClass *SchemaClass);
+	void CreateEditor(ULogicFlowAsset *Blueprint, TSharedPtr<class IToolkitHost> EditWithinLevelEditor, UClass *SchemaClass);
+
+	FYellowPaintCompiler YellowPaintCompiler;
 // 	virtual void RegisterLGEditor(UClass *ParentCls, TFunction<TSharedPtr<FLogicGraphEditor>(UClass *)> Handle);
 // 	virtual void UnregisterLGEditor(UClass *ParentCls);
 

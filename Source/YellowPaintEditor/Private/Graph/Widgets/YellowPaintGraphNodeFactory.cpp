@@ -1,4 +1,4 @@
-#include "EdGraph/YellowPaintGraphNodeFactory.h"
+#include "Graph/Widgets//YellowPaintGraphNodeFactory.h"
 #include "KismetPins/SGraphPinExec.h"
 #include "KismetPins/SGraphPinBool.h"
 #include "KismetPins/SGraphPinInteger.h"
@@ -9,10 +9,17 @@
 #include "KismetPins/SGraphPinNum.h"
 #include "KismetPins/SGraphPinObject.h"
 #include "KismetPins/SGraphPinString.h"
-#include "Schemal/YelloPaintSchema.h"
+#include "Graph//YelloPaintSchema.h"
 
 
-
+TSharedPtr<class SGraphNode> FYellowPaintGraphNodeFactory::CreateNode(UEdGraphNode* Node) const
+{
+	if(UEdYellowPaintNode* GraphNode = Cast<UEdYellowPaintNode>(Node))
+	{
+		return SNew(SYellowPaintGraphNode, GraphNode);
+	}
+	return nullptr;
+}
 
 
 TSharedPtr<class SGraphPin> FYellowPaintGraphPinFactory::CreatePin(class UEdGraphPin* InPin) const
@@ -60,7 +67,7 @@ TSharedPtr<class SGraphPin> FYellowPaintGraphPinFactory::CreatePin(class UEdGrap
 		{
 			return SNew(SGraphPinNum<double>, InPin);
 		}
+		return SNew(SGraphPin, InPin);
 	}
-
-	return SNew(SGraphPin, InPin);
+	return nullptr;
 }

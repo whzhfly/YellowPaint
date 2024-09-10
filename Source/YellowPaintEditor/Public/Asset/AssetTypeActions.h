@@ -16,7 +16,7 @@ public:
 
 public:
 	// IAssetTypeActions Implementation
-	virtual FText GetName() const override { return NSLOCTEXT("AssetTypeActions", "FAssetTypeActions_YellowPaintAsset", "YP Ability"); }
+	virtual FText GetName() const override { return NSLOCTEXT("AssetTypeActions", "FAssetTypeActions_YellowPaintAsset", "LogicFlow Asset"); }
 	virtual FColor GetTypeColor() const override { return FColor(255, 234, 80); }
 	virtual UClass* GetSupportedClass() const override;
 	virtual void OpenAssetEditor(const TArray<UObject*>& InObjects, TSharedPtr<class IToolkitHost> EditWithinLevelEditor = TSharedPtr<IToolkitHost>()) override;

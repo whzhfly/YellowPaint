@@ -1,8 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "YelloPaintSchema.h"
-#include "PaletteNode.h"
+#include "Graph/YelloPaintSchema.h"
+#include "LogicFlowNode.h"
 
 #define LOCTEXT_NAMESPACE "YPGraphSchema"
 
@@ -54,7 +54,7 @@ UEdGraphNode* FYellowPaintSchemaAction_NewNode::PerformAction(class UEdGraph* Pa
 		UEdYellowPaintNode* EdNode = Cast<UEdYellowPaintNode>(NodeTemplate);
 		if (PaletteBaseClass && EdNode)
 		{
-			EdNode->PaletteNode = NewObject<UPaletteNode>(NodeTemplate, PaletteBaseClass, NAME_None);
+			EdNode->FlowNode = NewObject<ULogicFlowNode>(NodeTemplate, PaletteBaseClass, NAME_None);
 		}
 		// setup pins after placing node in correct spot, since pin sorting will happen as soon as link connection change occurs
 		NodeTemplate->AllocateDefaultPins();
@@ -116,7 +116,7 @@ void UYelloPaintSchema::GetGraphContextActions(FGraphContextMenuBuilder& Context
 		FString DisplayText = TEXT("可用节点:");
 		FCategorizedGraphActionListBuilder ActionGraphActionBuilder(DisplayText);
 		TArray<UClass*> ChildClasses;
-		GetDerivedClasses(UPaletteNode::StaticClass(), ChildClasses);
+		GetDerivedClasses(ULogicFlowNode::StaticClass(), ChildClasses);
 
 		for (UClass* ChildClass : ChildClasses)
 		{
@@ -125,7 +125,7 @@ void UYelloPaintSchema::GetGraphContextActions(FGraphContextMenuBuilder& Context
 				continue; //过滤掉蓝图的SKEL和REINST类
 			}
 			UObject* DefaultObject = ChildClass->GetDefaultObject();
-			UPaletteNode* defaultObj = CastChecked<UPaletteNode>(DefaultObject);
+			ULogicFlowNode* defaultObj = CastChecked<ULogicFlowNode>(DefaultObject);
 			//检查节点是否能在当前图使用
 			/*if (defaultObj->GetPythonNodeTitle().EqualTo(FText::GetEmpty())) continue; //有些界面没名字*/
 			/*if (bIsLevelQuest && defaultObj->QuestNodeType == EQuestNodeType::USE_IN_MAIN_SCENE) continue;*/

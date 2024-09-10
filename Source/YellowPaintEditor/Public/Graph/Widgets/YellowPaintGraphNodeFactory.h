@@ -1,20 +1,12 @@
 #pragma once
 #include "EdGraphUtilities.h"
-#include "Schemal/EdYellowPaintNode.h"
+#include "Graph/Nodes/EdYellowPaintNode.h"
 #include "SYellowPaintGraphNode.h"
 
 class FYellowPaintGraphNodeFactory : public FGraphPanelNodeFactory
 {
 public:
-	virtual TSharedPtr<class SGraphNode> CreateNode(UEdGraphNode* Node) const override
-	{
-		if(UEdYellowPaintNode* GraphNode = Cast<UEdYellowPaintNode>(Node))
-		{
-			return SNew(SYellowPaintGraphNode, GraphNode);
-		}
-
-		return nullptr;
-	}
+	virtual TSharedPtr<class SGraphNode> CreateNode(UEdGraphNode* Node) const override;
 };
 
 class FYellowPaintGraphPinFactory : public FGraphPanelPinFactory

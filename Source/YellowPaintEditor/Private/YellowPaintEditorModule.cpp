@@ -4,9 +4,9 @@
 #include "Toolkits/AssetEditorToolkit.h"
 #include "Framework/MultiBox/MultiBoxBuilder.h"
 #include <ContentBrowserModule.h>
-#include  "AssetTypeActions.h"
+#include  "Asset/AssetTypeActions.h"
 #include "Style/YellowPaintEditorStyle.h"
-#include "EdGraph/YellowPaintGraphNodeFactory.h"
+#include "Graph/Widgets//YellowPaintGraphNodeFactory.h"
 // #include "BpToJson.h"
 
 #define LOCTEXT_NAMESPACE "fYellowPaintEditorModule"
@@ -15,8 +15,18 @@ void FYellowPaintEditorModule::StartupModule()
 {
 
 	IAssetTools &AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
+	
+	
+	FKismetCompilerContext::RegisterCompilerForBP(ULogicFlowAsset::StaticClass(), [](UBlueprint* InBlueprint, FCompilerResultsLog& InMessageLog, const FKismetCompilerOptions& InCompileOptions)
+	{
+		return MakeShared<FYellowPaintCompilerContext>(CastChecked<ULogicFlowAsset>(InBlueprint), InMessageLog, InCompileOptions);
+	});
+	
+	IKismetCompilerInterface& KismetCompilerModule = FModuleManager::LoadModuleChecked<IKismetCompilerInterface>("KismetCompiler");
+	KismetCompilerModule.GetCompilers().Add(&YellowPaintCompiler);
+	
 	auto EditorCategory =
-		AssetTools.RegisterAdvancedAssetCategory(FName(TEXT("YellowPaint")), LOCTEXT("YellowPaintEditorCategory", "YePaintGraph"));
+		AssetTools.RegisterAdvancedAssetCategory(FName(TEXT("LogicFlow")), LOCTEXT("YellowPaintEditorCategory", "LogicFlow"));
 	AssetTools.RegisterAssetTypeActions(MakeShared<FAssetTypeActions_YellowPaintAsset>(EditorCategory, UEdGraphSchema_K2::StaticClass()));
 
 	FContentBrowserModule& ContentBrowserModule = FModuleManager::LoadModuleChecked<FContentBrowserModule>(TEXT("ContentBrowser"));
@@ -30,6 +40,8 @@ void FYellowPaintEditorModule::StartupModule()
 
 	YellowPaintPinFactory = MakeShareable(new FYellowPaintGraphPinFactory());
 	FEdGraphUtilities::RegisterVisualPinFactory(YellowPaintPinFactory);
+	
+
 
 	FYellowPaintEditorStyle::Initialize();
 }
@@ -51,7 +63,7 @@ TSharedRef<FExtender> FYellowPaintEditorModule::OnExtendSkelMeshWithDNASelection
 	// 类型筛选
 	for (auto Asset : SelectedAssets)
 	{
-		if (Asset.GetClass()->IsChildOf(UYellowPaintGraph::StaticClass()))
+		if (Asset.GetClass()->IsChildOf(ULogicFlowAsset::StaticClass()))
 		{
 			QuestAssets.Add(Asset);
 		}
@@ -79,7 +91,7 @@ void FYellowPaintEditorModule::CreateDnaActionsSubMenu(FMenuBuilder& MenuBuilder
 }
 
 void FYellowPaintEditorModule::CreateEditor(
-	UYellowPaintGraph *Blueprint, TSharedPtr<class IToolkitHost> EditWithinLevelEditor, UClass *SchemaClass
+	ULogicFlowAsset *Blueprint, TSharedPtr<class IToolkitHost> EditWithinLevelEditor, UClass *SchemaClass
 )
 {
 	UClass *ParentCls = Blueprint->ParentClass;

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EdGraph/EdGraphNode.h"
-#include "PaletteNode.h"
+#include "LogicFlowNode.h"
 #include "EdYellowPaintNode.generated.h"
 
 /**
@@ -17,7 +17,7 @@ class YELLOWPAINTEDITOR_API UEdYellowPaintNode : public UEdGraphNode
 
 public:
 	UPROPERTY()
-	TObjectPtr<UPaletteNode> PaletteNode;
+	TObjectPtr<ULogicFlowNode> FlowNode;
 
 
 	virtual FLinearColor GetGraphNodeColor() const { return FLinearColor(0.15f, 0.15f, 0.15f); };

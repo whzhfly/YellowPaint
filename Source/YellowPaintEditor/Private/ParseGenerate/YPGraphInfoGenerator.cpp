@@ -2,7 +2,7 @@
 #include "Interfaces/IPluginManager.h"
 #include "JsonConvert/BpJsonConvert.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "UYellowPaintGraph.h"
+#include "LogicFlowAsset.h"
 
 void YPGraphInfoGenerator::Generate(const TArray<FAssetData> SelectedAssets)
 {
@@ -10,7 +10,7 @@ void YPGraphInfoGenerator::Generate(const TArray<FAssetData> SelectedAssets)
 	for (FAssetData assetData : SelectedAssets)
 	{
 		UObject* obj = assetData.GetAsset();
-		UYellowPaintGraph* QuestBP = CastChecked<UYellowPaintGraph>(obj);
+		ULogicFlowAsset* QuestBP = CastChecked<ULogicFlowAsset>(obj);
 		auto QuestLogicGeneratedClass = QuestBP->GeneratedClass;
 		/*UQuestLogicBase* QuestLogic = nullptr;
 		if (QuestLogicGeneratedClass->IsChildOf(UQuestLogicBase::StaticClass()))
@@ -38,7 +38,7 @@ void YPGraphInfoGenerator::Generate(const TArray<FAssetData> SelectedAssets)
 			
 		}*/
 
-		const FString RootPath = IPluginManager::Get().FindPlugin("YellowPaint")->GetBaseDir() / TEXT("Resources");
+		const FString RootPath = FPaths::Combine(IPluginManager::Get().FindPlugin("YellowPaint")->GetBaseDir(), TEXT("PyScript/Data/"));
 
 
 		if (!QuestBP) return;

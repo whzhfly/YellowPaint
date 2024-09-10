@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
 #include "SGraphNode.h"
-#include "Schemal/EdYellowPaintNode.h"
+#include "Graph/Nodes/EdYellowPaintNode.h"
 
 /**
  * 

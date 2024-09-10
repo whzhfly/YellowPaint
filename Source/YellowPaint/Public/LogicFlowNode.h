@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
-#include "PaletteNode.generated.h"
+#include "LogicFlowNode.generated.h"
 
 /**
  * 
  */
 UCLASS(Blueprintable, BlueprintType)
-class YELLOWPAINT_API UPaletteNode : public UObject
+class YELLOWPAINT_API ULogicFlowNode : public UObject
 {
 	GENERATED_BODY()
 

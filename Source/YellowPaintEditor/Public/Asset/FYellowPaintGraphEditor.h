@@ -23,6 +23,8 @@ public:
 	virtual FName GetToolkitFName() const override { return FName("YellowPaintEditor"); }
 
 
+	virtual void OnSelectedNodesChangedImpl(const TSet<class UObject *>& NewSelection) override;
+
 	virtual UToolMenu* RegisterModeToolbarIfUnregistered(const FName InModeName) override;
 
 protected:
@@ -38,6 +40,5 @@ protected:
 	
 	/** Called when Compile button is clicked */
     virtual void ExportJSON();
-
-	virtual void ShowDeatil();
+	
 };

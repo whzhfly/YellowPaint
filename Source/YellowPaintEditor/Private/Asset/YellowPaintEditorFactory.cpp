@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "YellowPaintEditorFactory.h"
-#include "UYellowPaintGraph.h"
+#include "Asset/YellowPaintEditorFactory.h"
+#include "LogicFlowAsset.h"
 #include "Kismet2/SClassPickerDialog.h"
-#include "GameFramework/Actor.h"
 #include "ClassViewerFilter.h"
 #include "ClassViewerModule.h"
 #include "UnrealEdGlobals.h"
+#include "LogicFlowDriverInstance.h"
 #include "Preferences/UnrealEdOptions.h"
 #include "Engine/BlueprintGeneratedClass.h"
 #include "Kismet2/KismetEditorUtilities.h"
@@ -25,13 +25,6 @@ public:
 
 	virtual bool IsClassAllowed(const FClassViewerInitializationOptions& InInitOptions, const UClass* InClass, TSharedRef< FClassViewerFilterFuncs > InFilterFuncs) override
 	{
-		/*if (InClass->HasMetaData(TEXT("MOS_EXPORT")))
-		{
-			if (FKismetEditorUtilities::CanCreateBlueprintOfClass(InClass))
-			{
-				return true;
-			}
-		}*/
 		if (InClass != nullptr)
 		{
 			for (auto cls : AllowedChildrenOfClasses)
@@ -42,8 +35,6 @@ public:
 				}
 			}
 		}
-		
-
 		if (const UBlueprintGeneratedClass* Cls = Cast<UBlueprintGeneratedClass>(InClass))
 		{
 			UClass* SuperClass = Cls->GetSuperClass();
@@ -64,22 +55,21 @@ public:
 
 UYellowPaintEditorFactory::UYellowPaintEditorFactory()
 {
-	SupportedClass = UYellowPaintGraph::StaticClass();
-	//ParentClass = ULogicGraphBlueprint::StaticClass();
+	SupportedClass = ULogicFlowAsset::StaticClass();
+	ParentClass = ULogicFlowDriverInstance::StaticClass();
 	bCreateNew = true;
 	bEditAfterNew = true;
 }
 
 UObject* UYellowPaintEditorFactory::FactoryCreateNew(UClass* Class, UObject* InParent, FName Name, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn, FName CallingContext)
 {
+	// ULogicFlowAsset ->
 	if (!ParentClass)
 	{
 		return nullptr;
 	}
-	check(Class->IsChildOf(UYellowPaintGraph::StaticClass()));
-
-	auto ypGraphBP = CastChecked<UYellowPaintGraph>(FKismetEditorUtilities::CreateBlueprint(ParentClass, InParent, Name, BPTYPE_Normal, UYellowPaintGraph::StaticClass(), UBlueprintGeneratedClass::StaticClass(), CallingContext));
-
+	check(Class->IsChildOf(ULogicFlowAsset::StaticClass()));
+	auto ypGraphBP = CastChecked<ULogicFlowAsset>(FKismetEditorUtilities::CreateBlueprint(ParentClass, InParent, Name, BPTYPE_Normal, ULogicFlowAsset::StaticClass(), UBlueprintGeneratedClass::StaticClass(), CallingContext));
 	return ypGraphBP;
 }
 
@@ -114,29 +104,10 @@ bool UYellowPaintEditorFactory::ConfigureProperties()
 
 	// Prevent creating blueprints of classes that require special setup (they'll be allowed in the corresponding factories / via other means)
 	TSharedPtr<FLGClassFilter> Filter = MakeShareable(new FLGClassFilter);
-	Filter->AllowedChildrenOfClasses.Add(AActor::StaticClass());
-	/*Filter->AllowedChildrenOfClasses.Add(UYellowPaintGraph::StaticClass());*/
-
-
+	Filter->AllowedChildrenOfClasses.Add(ULogicFlowDriverInstance::StaticClass());
+	
 	// option add
 	Options.ClassFilters.Add(Filter.ToSharedRef());
-
-
-	
-	//Filter->AllowedChildrenOfClasses.Add(AActor::StaticClass());
-	
-	/*if (FYellowPaintEditorModule* EditorModule = FModuleManager::GetModulePtr<FYellowPaintEditorModule>("LogicGraphEditor"))
-	{
-		for (auto Iter : EditorModule->ParentClasses)
-		{
-			Filter->AllowedChildrenOfClasses.Add(Iter);
-		}
-	}*/
-
-	/*UUnrealEdOptions::FGetNewAssetDefaultClasses& Delegate = GUnrealEd->GetUnrealEdOptions()->OnGetNewAssetDefaultClasses();
-	Delegate.BindStatic(&UYellowPaintEditorFactory::GetPickerDefaultClasses);*/
-	/*Delegate.Unbind();*/
-
 	const FText TitleText = LOCTEXT("CreateBlueprintOptions", "Pick Parent Class");
 	UClass* ChosenClass = nullptr;
 	const bool bPressedOk = SClassPickerDialog::PickClass(TitleText, Options, ChosenClass, UBlueprint::StaticClass());
@@ -177,12 +148,12 @@ bool UYellowPaintEditorFactory::CanCreateNew() const
 
 FString UYellowPaintEditorFactory::GetDefaultNewAssetName() const
 {
-	return FString(TEXT("DefaultAbility"));
+	return FString(TEXT("NewLogicFlowAsset"));
 }
 
 FText UYellowPaintEditorFactory::GetDisplayName() const
 {
-	return LOCTEXT("AbilityDriver", "AbilityDriver Graph");
+	return LOCTEXT("AbilityDriver", "LogicFlow Asset");
 }
 
 

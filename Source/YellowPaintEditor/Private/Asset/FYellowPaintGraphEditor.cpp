@@ -1,15 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "FYellowPaintGraphEditor.h"
+#include "Asset/FYellowPaintGraphEditor.h"
+
+#include "LogicFlowAsset.h"
 #include "EditorCommand/YellowPaintGraphEditorCommands.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "ToolMenu.h"
 #include "Toolkits/AssetEditorToolkit.h"
 #include "Toolkits/AssetEditorToolkitMenuContext.h"
 #include "ParseGenerate/YPGraphInfoGenerator.h"
-#include "Schemal/YelloPaintSchema.h"
-#include "Schemal/UEdYellowPaintGraph.h"
+#include "Graph/YelloPaintSchema.h"
+#include "Graph/UEdYellowPaintGraph.h"
+#include "Graph/Nodes/EdYellowPaintNode.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 
 #define LOCTEXT_NAMESPACE "YpGraphEditor"
@@ -206,16 +209,70 @@ void FYellowPaintGraphEditor::ExportJSON()
 	UE_LOG(YpLogGraphEditor, Log, TEXT("Export %s To JSON "), *BPPath);
 }
 
-void FYellowPaintGraphEditor::ShowDeatil()
+void FYellowPaintGraphEditor::OnSelectedNodesChangedImpl(const TSet<class UObject*>& NewSelection)
 {
-	UE_LOG(YpLogGraphEditor, Log, TEXT("ShowDeatil  "));
+	/**
+	***/
+	UBlueprint* BlueprintObj = GetBlueprintObj();
+	ULogicFlowAsset* FlowAsset = Cast<ULogicFlowAsset>(BlueprintObj);
+	if (FlowAsset != nullptr)
+	{
+		TSet<class UObject*> PropertyModifiedSelection;
+		PropertyModifiedSelection.Add(FlowAsset->FlowInstance);
+		/*SelectedNodeGUID = GraphNode->NodeGuid.ToString();*/
+		FBlueprintEditor::OnSelectedNodesChangedImpl(PropertyModifiedSelection);
+	}
+	
+	if (NewSelection.Num() == 1)
+	{
+		for (auto& Obj : NewSelection)
+		{
+			//Want to edit the underlying quest object, not the graph node
+			UEdYellowPaintNode* GraphNode = Cast<UEdYellowPaintNode>(Obj);
+			if (GraphNode && GraphNode->FlowNode)
+			{
+
+				TSet<class UObject*> ModifiedSelection;
+				ModifiedSelection.Add(GraphNode->FlowNode);
+				/*SelectedNodeGUID = GraphNode->NodeGuid.ToString();*/
+				FBlueprintEditor::OnSelectedNodesChangedImpl(ModifiedSelection);
+				return;
+			}
+			/*UQuestGraphNode_ComponentBase* ComponentNode = Cast<UQuestGraphNode_ComponentBase>(Obj);
+			if (ComponentNode && ComponentNode->ComponentPythonBase)
+			{
+
+				TSet<class UObject*> ModifiedSelection;
+				ModifiedSelection.Add(ComponentNode->ComponentPythonBase);
+
+				auto TimerManager = GEditor->GetTimerManager();
+				FTimerHandle TimerHandle;
+				/**
+				* 这里有个贼操蛋的bug, 如果是第一次从编辑器外直接点编辑器的组件, 会导致
+				* SKismetInspector::ShowDetailsForObjects先show了组件的python base 再show节点
+				* 但是node不是这个顺序 node先show节点再show的python base 就能正常显示
+				* 只能加个timer跳过这个时序bug 不过临时fix一下也没发现别的啥问题就是了
+
+				*#1#
+				TimerManager->SetTimer(TimerHandle, [this, ModifiedSelection]()
+					{
+						FBlueprintEditor::OnSelectedNodesChangedImpl(ModifiedSelection);
+					}, 0.1f, false);
+				return;
+			}*/
+		}
+	}
+
+
+	FBlueprintEditor::OnSelectedNodesChangedImpl(NewSelection);
 }
 
 
 FGraphAppearanceInfo FYellowPaintGraphEditor::GetGraphAppearance(UEdGraph* InGraph) const
 {
 	FGraphAppearanceInfo BPInfo = FBlueprintEditor::GetGraphAppearance(InGraph);
-	BPInfo.CornerText =  FText::FromString(TEXT("🍌逻辑编辑器🤖🍇🍉🍍🍓"));
+	// BPInfo.CornerText =  FText::FromString(TEXT("🍌逻辑编辑器🤖🍇🍉🍍🍓"));
+	BPInfo.CornerText =  FText::FromString(TEXT("🍌逻辑🍌"));
 	/*UQuestGraph* MaybeQuestGraph = Cast<UQuestGraph>(InGraph);*/
 	/*UObject* outer = MaybeQuestGraph->GetOuter();
 	UBlueprint* BP = CastChecked<UBlueprint>(outer);*/

@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Engine/Blueprint.h"
-#include "UYellowPaintGraph.generated.h"
+#include  "LogicFlowDriverInstance.h"
+#include "LogicFlowAsset.generated.h"
 
 /**
- * 
+ * 属于是一种Asset
  */
 UCLASS(BlueprintType)
-class YELLOWPAINTEDITOR_API UYellowPaintGraph : public UBlueprint
+class YELLOWPAINT_API ULogicFlowAsset : public UBlueprint
 {
 	GENERATED_UCLASS_BODY()
 public:
@@ -41,4 +42,9 @@ public:
 	 * Returns true if this blueprint supports delegates
 	 */
 	virtual bool SupportsDelegates() const override { return false; }
+
+	virtual void PostLoad() override;
+
+	UPROPERTY(BlueprintReadWrite, Category = "LogicFlow")
+	TObjectPtr<ULogicFlowDriverInstance> FlowInstance;
 };

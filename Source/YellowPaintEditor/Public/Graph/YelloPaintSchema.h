@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "EdGraph/EdGraphSchema.h"
 #include "EdGraphSchema_K2.h"
-#include "EdYellowPaintNode.h"
+#include "Graph/Nodes/EdYellowPaintNode.h"
 #include "YelloPaintSchema.generated.h"
 
 /**

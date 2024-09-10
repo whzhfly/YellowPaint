@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "EdGraph/SYellowPaintGraphNode.h"
+#include "Graph/Widgets//SYellowPaintGraphNode.h"
 #include "Style/YellowPaintEditorStyle.h"
 
 

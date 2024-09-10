@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AssetTypeActions.h"
-#include "FYellowPaintGraphEditor.h"
+#include "Asset/AssetTypeActions.h"
+#include "Asset/FYellowPaintGraphEditor.h"
 
 #include "Kismet2/KismetEditorUtilities.h"
 #include "BlueprintEditorTabs.h"
 #include "Engine/SimpleConstructionScript.h"
 #include "Kismet2/BlueprintEditorUtils.h"
-#include "UYellowPaintGraph.h"
+#include "LogicFlowAsset.h"
 #include "YellowPaintEditorModule.h"
 
 
@@ -18,14 +18,14 @@
 
 UClass* FAssetTypeActions_YellowPaintAsset::GetSupportedClass() const
 {
-	return UYellowPaintGraph::StaticClass();
+	return ULogicFlowAsset::StaticClass();
 }
 
 void FAssetTypeActions_YellowPaintAsset::OpenAssetEditor(const TArray<UObject*>& InObjects, TSharedPtr<class IToolkitHost> EditWithinLevelEditor /*= TSharedPtr<IToolkitHost>()*/)
 {
 	for (auto ObjIt = InObjects.CreateConstIterator(); ObjIt; ++ObjIt)
 	{
-		if (UYellowPaintGraph* Blueprint = Cast<UYellowPaintGraph>(*ObjIt))
+		if (ULogicFlowAsset* Blueprint = Cast<ULogicFlowAsset>(*ObjIt))
 		{
 			bool bFoundExisting = false;
 

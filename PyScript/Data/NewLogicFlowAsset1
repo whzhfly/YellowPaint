@@ -1,0 +1,314 @@
+{
+	"parent_class": "/Script/YellowPaint.LogicFlowDriverInstance",
+	"class_name": "NewLogicFlowAsset1",
+	"class_path": "/Game/NewLogicFlowAsset1.NewLogicFlowAsset1_C",
+	"properties":
+	{
+	},
+	"new_variables":
+	{
+	},
+	"event_graphs": [
+		{
+			"guid": "3BD3F52543EEFDF8AD0EBE900CADD158",
+			"nodes": [
+				{
+					"guid": "618651B640C66511F57050940AC6D342",
+					"type": "EdYellowPaintNode",
+					"pins": [
+						{
+							"guid": "5271E8B04DFDA8F4AAB028B611062A84",
+							"name": "Out",
+							"type":
+							{
+								"type": "exec"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "AF0636904A0CAD50A71186A5AB20428B",
+							"name": "In",
+							"type":
+							{
+								"type": "exec"
+							},
+							"direction": 0,
+							"value": null,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "BBC57A044A25D1A9F763FC8AE9D71F76",
+							"name": "Int",
+							"type":
+							{
+								"type": "int"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "04C620594A996F39DA758F923AC4BD5B",
+							"name": "bool",
+							"type":
+							{
+								"type": "bool"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "8ED833F94E0CA64B2EB84C9ED28F46AF",
+							"name": "Int",
+							"type":
+							{
+								"type": "int"
+							},
+							"direction": 0,
+							"value": 0,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "06CF87AA41E4F6921A9965ADC7FBD894",
+							"name": "bool",
+							"type":
+							{
+								"type": "bool"
+							},
+							"direction": 0,
+							"value": false,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "ED5BA9FC4013447D9D7D5FB5B8A13260",
+							"name": "Wild",
+							"type":
+							{
+								"type": "wildcard"
+							},
+							"direction": 0,
+							"value": "",
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "BC651AD1451092CDE1221C952AC4A159",
+							"name": "Wild",
+							"type":
+							{
+								"type": "wildcard"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						}
+					]
+				},
+				{
+					"guid": "8006017549B278A9016EEFB293BF40AF",
+					"type": "EdYellowPaintNode",
+					"pins": [
+						{
+							"guid": "B7D2D1B04AA432264231A9BDDF419F49",
+							"name": "Out",
+							"type":
+							{
+								"type": "exec"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "4C4A31F5432BA16DCBC7A88337898EFD",
+							"name": "In",
+							"type":
+							{
+								"type": "exec"
+							},
+							"direction": 0,
+							"value": null,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "F403D1AB4E70CD3B3606399302C944AE",
+							"name": "Int",
+							"type":
+							{
+								"type": "int"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "ADE2DE8B4DEA512FF19B9B8879886116",
+							"name": "bool",
+							"type":
+							{
+								"type": "bool"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "59F530D049EA69F79B18A2AD1F0BD19A",
+							"name": "Int",
+							"type":
+							{
+								"type": "int"
+							},
+							"direction": 0,
+							"value": 0,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "17C22F2D49EC2D4D3D8372806E29780D",
+							"name": "bool",
+							"type":
+							{
+								"type": "bool"
+							},
+							"direction": 0,
+							"value": false,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "2CB75A144C9D3C48BFA7FAB25D4752DB",
+							"name": "Wild",
+							"type":
+							{
+								"type": "wildcard"
+							},
+							"direction": 0,
+							"value": "",
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "59F03461451869CDBEC36D9D0C6E5B39",
+							"name": "Wild",
+							"type":
+							{
+								"type": "wildcard"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						}
+					]
+				},
+				{
+					"guid": "279CA3BA4DFFD28AD7E84B9E663412EF",
+					"type": "EdYellowPaintNode",
+					"pins": [
+						{
+							"guid": "01647DA94C5142CF5DD3FB8F2140F7EC",
+							"name": "Out",
+							"type":
+							{
+								"type": "exec"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "00541AED4CB240A659CFA5ABE2A9B4D5",
+							"name": "In",
+							"type":
+							{
+								"type": "exec"
+							},
+							"direction": 0,
+							"value": null,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "F6A91ACC4A5E6311994F0598AC2274B2",
+							"name": "Int",
+							"type":
+							{
+								"type": "int"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "5C92F845417612B0127DAFB14A8BF948",
+							"name": "bool",
+							"type":
+							{
+								"type": "bool"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "1BF4743242A9327FE5232B89494ED6A3",
+							"name": "Int",
+							"type":
+							{
+								"type": "int"
+							},
+							"direction": 0,
+							"value": 0,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "EED5EEF540C6B0C4EE3F2BA17854EE14",
+							"name": "bool",
+							"type":
+							{
+								"type": "bool"
+							},
+							"direction": 0,
+							"value": false,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "201A62474820E25FCA933881E34B2C4E",
+							"name": "Wild",
+							"type":
+							{
+								"type": "wildcard"
+							},
+							"direction": 0,
+							"value": "",
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "F09D26F344B4B5ED651272B7FD457B2B",
+							"name": "Wild",
+							"type":
+							{
+								"type": "wildcard"
+							},
+							"direction": 1,
+							"linked_to": [],
+							"sub_pins": []
+						}
+					]
+				}
+			],
+			"connections": []
+		}
+	],
+	"func_graphs": []
+}
