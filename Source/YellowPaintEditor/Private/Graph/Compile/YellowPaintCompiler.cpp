@@ -2,6 +2,8 @@
 #include "LogicFlowAsset.h"
 #include "Kismet2/KismetReinstanceUtilities.h"
 #include "LogicFlowDriverInstance.h"
+#include "Graph/Nodes/EdYellowPaintNode.h"
+#include "Graph/UEdYellowPaintGraph.h"
 #include "YellowPaintGeneratedClass.h"
 
 #define LOCTEXT_NAMESPACE "YellowPaintCompiler"
@@ -151,6 +153,36 @@ ULogicFlowAsset* FYellowPaintCompilerContext::GetFlowAsset() const
 }
 
 
+void FYellowPaintCompilerContext::CollectAllFlowNodes()
+{
+	ULogicFlowAsset* FlowAsset = GetFlowAsset();
+	if (FlowAsset)
+	{
+		TArray<UEdGraph*> Graphs;
+		FlowAsset->GetAllGraphs(Graphs);
+		for (UEdGraph* Graph : Graphs)
+		{
+			UEdYellowPaintGraph* PaintGraph = Cast<UEdYellowPaintGraph>(Graph);
+			if (PaintGraph)
+			{
+				for (auto Node: PaintGraph->Nodes)
+				{
+					UEdYellowPaintNode* PaintNode = Cast<UEdYellowPaintNode>(Node);
+					if (PaintNode)
+					{
+						if (FlowAsset->FlowInstance)
+						{
+							// 是否复制 todo
+							ULogicFlowNode* NewFlowNode = DuplicateObject(PaintNode->FlowNode, FlowAsset->GeneratedClass);
+							FlowAsset->FlowInstance->FlowNodesMap.Add(PaintNode->NodeGuid.ToString(), NewFlowNode);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 void FYellowPaintCompilerContext::FinishCompilingClass(UClass* Class)
 {
 	ULogicFlowAsset* FlowAsset = GetFlowAsset();
@@ -181,6 +213,8 @@ void FYellowPaintCompilerContext::FinishCompilingClass(UClass* Class)
 
 			GeneratedClass->FlowDriverInstance = FlowAsset->FlowInstance;
 		}
+
+		CollectAllFlowNodes();
 		
 		/*ULogicFlowDriverInstance* NewFlowDriverInstance = Cast<ULogicFlowDriverInstance>(StaticDuplicateObject(QuestBP->QuestTemplate, BPGClass, NAME_None, RF_AllFlags & ~RF_DefaultSubObject));
 		BPGClass->SetQuestTemplate(NewQuestTemplate);*/

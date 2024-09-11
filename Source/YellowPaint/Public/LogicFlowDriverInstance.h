@@ -3,6 +3,7 @@
 
 
 #include "CoreMinimal.h"
+#include "LogicFlowNode.h"
 #include "LogicFlowDriverInstance.generated.h"
 
 
@@ -25,5 +26,8 @@ public:
 	int ExeCount;
 
 
+	UPROPERTY()
+	TMap<FString, ULogicFlowNode*> FlowNodesMap; // 所有的任务step
+	
 	virtual void DeepCopyFormAnother(ULogicFlowDriverInstance* Instance);
 };

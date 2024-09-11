@@ -61,6 +61,9 @@ protected:
 
 	class UYellowPaintGeneratedClass* NewBlueprintClass;
 
+
+	void CollectAllFlowNodes();
+
 	/** Compiler customization for Widgets */
 	/*class UQuestGraphSchema* QuestSchema;*/
 private:
