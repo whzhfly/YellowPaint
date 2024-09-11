@@ -37,10 +37,10 @@ void FYellowPaintCompiler::PostCompile(UBlueprint* Blueprint, const FKismetCompi
 		UClass* GenerateClass = LogicAsset->GeneratedClass;
 		UObject* AssetParentCDO = GenerateClass->GetDefaultObject();
 		ULogicFlowDriverInstance* LogicDrive = CastChecked<ULogicFlowDriverInstance>(AssetParentCDO);
-		if (LogicDrive)
+		/*if (LogicDrive)
 		{
 			DuplicateObject(LogicDrive, LogicAsset->FlowInstance);
-		}
+		}*/
 	}
 }
 
@@ -128,6 +128,21 @@ void FYellowPaintCompilerContext::EnsureProperGeneratedClass(UClass*& TargetUCla
 void FYellowPaintCompilerContext::CopyTermDefaultsToDefaultObject(UObject* DefaultObject)
 {
 	FKismetCompilerContext::CopyTermDefaultsToDefaultObject(DefaultObject);
+	ULogicFlowAsset* FlowAsset = GetFlowAsset();
+	if (Cast<ULogicFlowDriverInstance>(DefaultObject))
+	{
+		if (FlowAsset != nullptr)
+		{
+			ULogicFlowDriverInstance* Instance = FlowAsset->FlowInstance;
+			ULogicFlowDriverInstance* NewInstance = Cast<ULogicFlowDriverInstance>(DuplicateObject(DefaultObject, DefaultObject->GetOutermost()));
+			Instance->DeepCopyFormAnother(NewInstance);
+			/*
+			if (NewInstance != nullptr)
+			{
+				FlowAsset->FlowInstance = NewInstance;
+			}*/
+		}
+	}
 }
 
 ULogicFlowAsset* FYellowPaintCompilerContext::GetFlowAsset() const

@@ -23,4 +23,7 @@ public:
 
 	UPROPERTY(EditAnywhere, DisplayName="Flow次数")
 	int ExeCount;
+
+
+	virtual void DeepCopyFormAnother(ULogicFlowDriverInstance* Instance);
 };
