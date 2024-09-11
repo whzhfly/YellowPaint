@@ -173,8 +173,9 @@ void FYellowPaintCompilerContext::CollectAllFlowNodes()
 						if (FlowAsset->FlowInstance)
 						{
 							// 是否复制 todo
-							ULogicFlowNode* NewFlowNode = DuplicateObject(PaintNode->FlowNode, FlowAsset->GeneratedClass);
-							FlowAsset->FlowInstance->FlowNodesMap.Add(PaintNode->NodeGuid.ToString(), NewFlowNode);
+							/*ULogicFlowNode* NewFlowNode = DuplicateObject(PaintNode->FlowNode, FlowAsset->GeneratedClass);
+							 *这里的名字换了 但是这个新的NewFlowNode对象并没有 没有保存   保存的还是PaintNode->FlowNode 这个 这个是因为Graph Node FlowNode 自动保存的
+							FlowAsset->FlowInstance->FlowNodesMap.Add(PaintNode->NodeGuid.ToString(), NewFlowNode);*/
 						}
 					}
 				}
