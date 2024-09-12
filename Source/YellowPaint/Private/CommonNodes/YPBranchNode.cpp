@@ -15,6 +15,21 @@ void UYPBranchNode::OnExit_Implementation()
 	
 }
 
+void UYPBranchNode::CollectionAllocatePin_Implementation()
+{
+	AddAllocatePin(EEdGraphPinDirection::EGPD_Input, TEXT("exec"), TEXT("In"));
+	AddAllocatePin(EEdGraphPinDirection::EGPD_Input, TEXT("bool"), TEXT("Value"));
+
+	AddAllocatePin(EEdGraphPinDirection::EGPD_Output, TEXT("exec"), TEXT("True"));
+	AddAllocatePin(EEdGraphPinDirection::EGPD_Output, TEXT("exec"), TEXT("False"));
+}
+
+void USequenceFlowNode::CollectionAllocatePin_Implementation()
+{
+	AddAllocatePin(EEdGraphPinDirection::EGPD_Input, TEXT("exec"), TEXT("In"));
+
+	AddAllocatePin(EEdGraphPinDirection::EGPD_Output, TEXT("exec"), TEXT("False"));
+}
 
 void UYAsyncNode::OnEnter_Implementation()
 {

@@ -25,6 +25,18 @@ void SYellowPaintGraphNode::UpdateGraphNode()
 	LeftNodeBox.Reset();
 	/*ComponentWidgets.Reset();*/
 
+	//	     ______________________
+	//	    |      TITLE AREA      |
+	//	    +-------+------+-------+
+	//	    | (>) L |      | R (>) |
+	//	    | (>) E |      | I (>) |
+	//	    | (>) F |      | G (>) |
+	//	    | (>) T |      | H (>) |
+	//	    |       |      | T (>) |
+	//	    |_______|______|_______|
+	//
+	
+
 	FSlateRenderTransform QuantityRender;
 	QuantityRender.SetTranslation(FVector2D(0.f, -30.f));
 
