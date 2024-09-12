@@ -26,6 +26,10 @@
 #define LOCTEXT_NAMESPACE "SYellowPaintGraphNode"
 
 
+const FLinearColor SYellowPaintGraphNode::UnselectedNodeTint = FLinearColor(1.0f, 1.0f, 1.0f, 0.5f);
+const FLinearColor SYellowPaintGraphNode::ConfigBoxColor = FLinearColor(0.04f, 0.04f, 0.04f, 1.0f);
+
+
 void SYellowPaintGraphNode::Construct(const FArguments& InArgs, UEdYellowPaintNode* InNode)
 {
 	PointNode = InNode;
@@ -661,7 +665,8 @@ FSlateColor SYellowPaintGraphNode::GetNodeBodyColor() const
 FSlateColor SYellowPaintGraphNode::GetNodeTitleIconColor() const
 {
 	FLinearColor ReturnIconColor = IconColor;
-	ReturnIconColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f); 
+	ReturnIconColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f);
+	ReturnIconColor *= UnselectedNodeTint;
 	/*if (FlowGraphNode->GetSignalMode() != EFlowSignalMode::Enabled)
 	{
 		ReturnIconColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f); 

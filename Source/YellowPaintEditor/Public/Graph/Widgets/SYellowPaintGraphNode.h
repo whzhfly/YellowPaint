@@ -87,4 +87,9 @@ public:
 
 	// Variant of SGraphNode::OnAddPin
 	virtual FReply OnAddFlowPin(const EEdGraphPinDirection Direction);
+
+
+public:
+	static const FLinearColor UnselectedNodeTint;
+	static const FLinearColor ConfigBoxColor;
 };
