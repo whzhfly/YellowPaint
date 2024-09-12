@@ -27,7 +27,10 @@ public:
 
 
 	UPROPERTY()
-	TMap<FString, ULogicFlowNode*> FlowNodesMap; // 所有的任务step
+	TMap<FString, ULogicFlowNode*> FlowNodesMap;
+
+	UFUNCTION()
+	virtual void StartFlow();
 	
 	virtual void DeepCopyFormAnother(ULogicFlowDriverInstance* Instance);
 };

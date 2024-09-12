@@ -37,6 +37,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetTextLibrary.h"
+#include "Graph/Nodes/EdYellowPaintNode.h"
 // custom
 #include <functional>
 
@@ -101,22 +102,22 @@ TSharedPtr<FJsonObject> BpJsonConvert::Convert()
 	{
 		auto p = bpClass->FindPropertyByName(FName(elem.Key));
 		if (!p) continue;
-		if (p->GetOwnerClass()->HasAnyClassFlags(CLASS_Native) && !p->HasMetaData("MOS_EXPORT"))
+		/*if (p->GetOwnerClass()->HasAnyClassFlags(CLASS_Native) && !p->HasMetaData("MOS_EXPORT"))
 		{
 			keyToRemove.Add(elem.Key);
 			continue;
-		}
+		}*/
 		auto pObject = CastField<const FObjectPropertyBase>(p);
-		if (pObject && pObject->PropertyClass->IsChildOf(UActorComponent::StaticClass()))
+		/*if (pObject && pObject->PropertyClass->IsChildOf(UActorComponent::StaticClass()))
 		{
 			keyToRemove.Add(elem.Key);
 			continue;
-		}
+		}*/
 	}
-	for (auto &key : keyToRemove)
+	/*for (auto &key : keyToRemove)
 	{
 		jProperties->RemoveField(key);
-	}
+	}*/
 
 	// NewVariables
 	auto jNewVariables = MakeShared<FJsonObject>();
@@ -180,6 +181,15 @@ TSharedPtr<FJsonObject> BpJsonConvert::NodeToJson(const TObjectPtr<UEdGraphNode>
 	auto handler = FLGNodeHandlerRegistry::Get()->GetHandler(nodeClass);
 	/*if (!handler) return nullptr;*/
 	TSharedPtr<FJsonObject> jNode = handler->ToJson(node);
+	/*if (Cast<UEdYellowPaintNode>(node))
+	{
+		UEdYellowPaintNode* PaintNode = Cast<UEdYellowPaintNode>(node);
+		auto FlowProperties = MakeShared<FJsonObject>();
+		ULogicFlowNode* FlowNode = PaintNode->FlowNode;
+		FJsonObjectConverterExt::UStructToJsonObject(FlowNode->GetClass(), FlowNode, FlowProperties, 0, 0);
+		jNode->SetObjectField("FlowProperty", FlowProperties);
+		jNode->SetStringField("FlowType", PaintNode->FlowNode.GetClass()->GetName());
+	}*/
 	return jNode;
 }
 

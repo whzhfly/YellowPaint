@@ -1,6 +1,8 @@
 #include "JsonConvert/NodeHandler/LGNodeHandler.h"
 #include "JsonConvert/BpJsonConvert.h"
 #include "UObject/NoExportTypes.h"
+#include "Graph/Nodes/EdYellowPaintNode.h"
+#include  "JsonConvert/JsonObjectConverterExt.h"
 #include  "JsonConvert/NodeHandler/LGNodeHandler_Default.h"
 
 TSharedPtr<FJsonObject> FLGNodeHandler::ToJson(const TObjectPtr<UEdGraphNode> node)
@@ -9,8 +11,19 @@ TSharedPtr<FJsonObject> FLGNodeHandler::ToJson(const TObjectPtr<UEdGraphNode> no
 	auto nodeClass = node->GetClass();
 
 	jNode->SetStringField("guid", node->NodeGuid.ToString());
-	jNode->SetStringField("type", nodeClass->GetName());
+	/*jNode->SetStringField("type", nodeClass->GetName());*/
 
+
+	if (Cast<UEdYellowPaintNode>(node))
+	{
+		UEdYellowPaintNode* PaintNode = Cast<UEdYellowPaintNode>(node);
+		auto FlowProperties = MakeShared<FJsonObject>();
+		ULogicFlowNode* FlowNode = PaintNode->FlowNode;
+		FJsonObjectConverterExt::UStructToJsonObject(FlowNode->GetClass(), FlowNode, FlowProperties, 0, 0);
+		jNode->SetStringField("type", PaintNode->FlowNode.GetClass()->GetName());
+		jNode->SetObjectField("Property", FlowProperties);
+	}
+	
 	// pins
 	TArray<TSharedPtr<FJsonValue>> jPins;
 	for (auto pin : node->Pins)

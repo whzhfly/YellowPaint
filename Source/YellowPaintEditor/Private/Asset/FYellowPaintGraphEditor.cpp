@@ -37,20 +37,21 @@ void FYellowPaintGraphEditor::InitBlueprintEditorExt(
 	int Count = 0;
 
 	UEdGraph* YpGraph = nullptr;
-	FName PaletteGraphName = FName("Palette");
+	FName LogicFlowGraphName = FName("LogicFlow");
 
 	for (UEdGraph* Graph : Graphs)
 	{
-		if (Graph->GetFName() == UEdGraphSchema_K2::GN_EventGraph)
+		/*if (Graph->GetFName() == UEdGraphSchema_K2::GN_EventGraph)
 		{
 			Count += 1;
 			if (Graph->Schema != InSchemaClass)
 			{
 				Graph->Schema = InSchemaClass;
 			}
-		}
-		if (Graph->GetFName() == PaletteGraphName)
+		}*/
+		if (Graph->GetFName() == LogicFlowGraphName)
 		{
+			Count += 1;
 			YpGraph = Graph;
 		}
 	}
@@ -58,13 +59,18 @@ void FYellowPaintGraphEditor::InitBlueprintEditorExt(
 	if(YpGraph == nullptr)
 	{
 		YpGraph =
-				FBlueprintEditorUtils::CreateNewGraph(Blueprint, PaletteGraphName, UEdYellowPaintGraph::StaticClass(), UYelloPaintSchema::StaticClass());
+				FBlueprintEditorUtils::CreateNewGraph(Blueprint, LogicFlowGraphName, UEdYellowPaintGraph::StaticClass(), UYelloPaintSchema::StaticClass());
 		YpGraph->bAllowDeletion =
 			false;	//@TODO: Really, just want to make sure we never drop below 1, not that you cannot delete any particular one!
 		YpGraph->bAllowRenaming = false;
 
 		FBlueprintEditorUtils::AddUbergraphPage(Blueprint, YpGraph);
 	}
+	if (YpGraph)
+	{
+		this->OpenDocument(YpGraph, FDocumentTracker::ForceOpenNewDocument);
+	}
+	/*
 	if (Count == 0)
 	{
 		// FKismetEditorUtilities::CreateDefaultEventGraphs(Blueprint);
@@ -80,25 +86,26 @@ void FYellowPaintGraphEditor::InitBlueprintEditorExt(
 			Blueprint->LastEditedDocuments.AddUnique(Ubergraph);
 		}
 	}
+	*/
 
-	for (UEdGraph* Graph : Graphs)
+	/*for (UEdGraph* Graph : Graphs)
 	{
 		if (Graph->GetFName() == UEdGraphSchema_K2::FN_UserConstructionScript)
 		{
 			this->CloseDocumentTab(Graph);
 			break;
 		}
-	}
-	Graphs.Empty();
-	Blueprint->GetAllGraphs(Graphs);
-	for (UEdGraph* Graph : Graphs)
+	}*/
+	/*Graphs.Empty();
+	Blueprint->GetAllGraphs(Graphs);*/
+	/*for (UEdGraph* Graph : Graphs)
 	{
 		if (Graph->GetFName() == UEdGraphSchema_K2::GN_EventGraph)
 		{
 			this->OpenDocument(Graph, FDocumentTracker::ForceOpenNewDocument);
 			break;
 		}
-	}
+	}*/
 }
 
 UToolMenu* FYellowPaintGraphEditor::RegisterModeToolbarIfUnregistered(const FName InModeName)
@@ -272,7 +279,7 @@ FGraphAppearanceInfo FYellowPaintGraphEditor::GetGraphAppearance(UEdGraph* InGra
 {
 	FGraphAppearanceInfo BPInfo = FBlueprintEditor::GetGraphAppearance(InGraph);
 	// BPInfo.CornerText =  FText::FromString(TEXT("🍌逻辑编辑器🤖🍇🍉🍍🍓"));
-	BPInfo.CornerText =  FText::FromString(TEXT("🍌逻辑🍌"));
+	BPInfo.CornerText =  FText::FromString(TEXT("🤖Flow"));
 	/*UQuestGraph* MaybeQuestGraph = Cast<UQuestGraph>(InGraph);*/
 	/*UObject* outer = MaybeQuestGraph->GetOuter();
 	UBlueprint* BP = CastChecked<UBlueprint>(outer);*/

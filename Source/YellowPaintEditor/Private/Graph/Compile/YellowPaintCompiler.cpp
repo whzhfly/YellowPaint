@@ -136,7 +136,8 @@ void FYellowPaintCompilerContext::CopyTermDefaultsToDefaultObject(UObject* Defau
 		if (FlowAsset != nullptr)
 		{
 			ULogicFlowDriverInstance* Instance = FlowAsset->FlowInstance;
-			ULogicFlowDriverInstance* NewInstance = Cast<ULogicFlowDriverInstance>(DuplicateObject(DefaultObject, DefaultObject->GetOutermost()));
+			auto NewObj = FlowAsset->GeneratedClass->ClassDefaultObject;
+			ULogicFlowDriverInstance* NewInstance = Cast<ULogicFlowDriverInstance>(DuplicateObject(NewObj, GetTransientPackage()));
 			Instance->DeepCopyFormAnother(NewInstance);
 			/*
 			if (NewInstance != nullptr)
@@ -165,6 +166,10 @@ void FYellowPaintCompilerContext::CollectAllFlowNodes()
 			UEdYellowPaintGraph* PaintGraph = Cast<UEdYellowPaintGraph>(Graph);
 			if (PaintGraph)
 			{
+				if (FlowAsset->FlowInstance)
+				{
+					FlowAsset->FlowInstance->FlowNodesMap.Empty();
+				}
 				for (auto Node: PaintGraph->Nodes)
 				{
 					UEdYellowPaintNode* PaintNode = Cast<UEdYellowPaintNode>(Node);
@@ -173,9 +178,17 @@ void FYellowPaintCompilerContext::CollectAllFlowNodes()
 						if (FlowAsset->FlowInstance)
 						{
 							// 是否复制 todo
-							/*ULogicFlowNode* NewFlowNode = DuplicateObject(PaintNode->FlowNode, FlowAsset->GeneratedClass);
-							 *这里的名字换了 但是这个新的NewFlowNode对象并没有 没有保存   保存的还是PaintNode->FlowNode 这个 这个是因为Graph Node FlowNode 自动保存的
-							FlowAsset->FlowInstance->FlowNodesMap.Add(PaintNode->NodeGuid.ToString(), NewFlowNode);*/
+							//ULogicFlowNode* NewFlowNode = DuplicateObject(PaintNode->FlowNode, FlowAsset->GeneratedClass);
+							// *这里的名字换了 但是这个新的NewFlowNode对象并没有 没有保存   保存的还是PaintNode->FlowNode 这个 这个是因为Graph Node FlowNode 自动保存的
+							//FlowAsset->FlowInstance->FlowNodesMap.Add(PaintNode->NodeGuid.ToString(), NewFlowNode);*/
+							if (FlowAsset->FlowInstance->FlowNodesMap.Find(PaintNode->NodeGuid.ToString()))
+							{
+								FlowAsset->FlowInstance->FlowNodesMap[PaintNode->NodeGuid.ToString()] = PaintNode->FlowNode;
+							}
+							else
+							{
+								FlowAsset->FlowInstance->FlowNodesMap.Add(PaintNode->NodeGuid.ToString(), PaintNode->FlowNode);
+							}
 						}
 					}
 				}

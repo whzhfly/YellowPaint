@@ -17,7 +17,15 @@ FText UEdYellowPaintNode::GetNodeTitleText() const
 
 void UEdYellowPaintNode::AllocateDefaultPins()
 {
-	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Exec, TEXT("Out"));
+	if (FlowNode)
+	{
+		FlowNode->CollectionAllocatePin();
+		for (auto pinInfo: FlowNode->PinInfoArray) {
+			CreatePin(pinInfo.Dir, pinInfo.PinCategory, pinInfo.PinName);
+		}
+	}
+	
+	/*CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Exec, TEXT("Out"));
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Exec, TEXT("In"));
 
 	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Int, TEXT("Int"));
@@ -32,13 +40,13 @@ void UEdYellowPaintNode::AllocateDefaultPins()
 	InputPinParams.ContainerType = EPinContainerType::None;
 	InputPinParams.ValueTerminalType = FEdGraphTerminalType();
 	InputPinParams.ValueTerminalType .TerminalCategory = UEdGraphSchema_K2::PC_Int;
-	/*PinParams.ValueTerminalType = ProtoPinType.PinValueType;*/
+	/*PinParams.ValueTerminalType = ProtoPinType.PinValueType;#1#
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Wildcard, TEXT("Wild"), InputPinParams);
 
 	UEdGraphNode::FCreatePinParams PinParams;
 	PinParams.ContainerType = EPinContainerType::None;
 	PinParams.ValueTerminalType = FEdGraphTerminalType();
 	PinParams.ValueTerminalType .TerminalCategory = UEdGraphSchema_K2::PC_Boolean;
-	/*PinParams.ValueTerminalType = ProtoPinType.PinValueType;*/
-	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, TEXT("Wild"), PinParams);
+	/*PinParams.ValueTerminalType = ProtoPinType.PinValueType;#1#
+	CreatePin(EGPD_Output, UEdGraphSchema_K2::PC_Wildcard, TEXT("Wild"), PinParams);*/
 }

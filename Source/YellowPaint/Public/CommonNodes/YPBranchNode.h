@@ -35,8 +35,33 @@ protected:
 	void OnEnter_Implementation() override;
 	
 	void OnExit_Implementation() override;
+
+public:
+	void CollectionAllocatePin_Implementation() override;
 	
 public:
 	UPROPERTY(EditAnywhere, DisplayName="异步")
 	bool HasBeenChecked;
+};
+
+
+UCLASS()
+class YELLOWPAINT_API UFlowStartNode : public ULogicFlowNode
+{
+	GENERATED_BODY()
+
+public:
+	void CollectionAllocatePin_Implementation() override;
+
+	
+};
+
+UCLASS()
+class YELLOWPAINT_API UFlowEndNode : public ULogicFlowNode
+{
+	GENERATED_BODY()
+
+public:
+	void CollectionAllocatePin_Implementation() override;
+
 };
