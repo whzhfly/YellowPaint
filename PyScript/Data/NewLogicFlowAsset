@@ -4,66 +4,63 @@
 	"class_path": "/Game/NewLogicFlowAsset.NewLogicFlowAsset_C",
 	"properties":
 	{
+		"HasBeenChecked": false,
+		"ExeCount": 0,
+		"FlowNodesMap":
+		{
+		}
 	},
 	"new_variables":
 	{
 	},
 	"event_graphs": [
 		{
-			"guid": "A0D152AD4B8EF76F8A3E4F803E73AE45",
+			"guid": "5FC5D030443DCFBC6E07BBA42F2C9D37",
 			"nodes": [
 				{
-					"guid": "A2D9585E4135C2C2946BA4885C9F44EE",
-					"type": "EdYellowPaintNode",
+					"guid": "71E9A489416715A19AEB2884A605CC7D",
+					"type": "FlowEndNode",
+					"Property":
+					{
+						"NodeDescription": ""
+					},
 					"pins": [
 						{
-							"guid": "F065F70B4C7AACD85B0C56BF6B1B943D",
-							"name": "Out",
-							"type":
-							{
-								"type": "exec"
-							},
-							"direction": 1,
-							"linked_to": [],
-							"sub_pins": []
-						},
-						{
-							"guid": "AB46105B4EFE5A008ECDD6BBF8CE89CC",
+							"guid": "C696ACA9450E6CDD3AED1392162FB89A",
 							"name": "In",
 							"type":
 							{
 								"type": "exec"
 							},
 							"direction": 0,
-							"value": null,
 							"linked_to": [],
 							"sub_pins": []
-						},
+						}
+					]
+				},
+				{
+					"guid": "EF9DC965463C93AAE9CABAA0E451A96C",
+					"type": "YAsyncNode",
+					"Property":
+					{
+						"HasBeenChecked": true,
+						"NodeDescription": "231"
+					},
+					"pins": [
 						{
-							"guid": "0FFA11794E80A512997752BF512EB220",
-							"name": "Int",
+							"guid": "11883FE64A5290EE105F54929FEEB330",
+							"name": "In",
 							"type":
 							{
-								"type": "int"
+								"type": "exec"
 							},
-							"direction": 1,
+							"direction": 0,
 							"linked_to": [],
 							"sub_pins": []
 						},
 						{
-							"guid": "DBE1C4BC406D0BCECC450B888A4C57A8",
-							"name": "bool",
-							"type":
-							{
-								"type": "bool"
-							},
-							"direction": 1,
-							"linked_to": [],
-							"sub_pins": []
-						},
-						{
-							"guid": "543E1AFD4170ADF8EFF88C8A3B34E5C2",
-							"name": "Int",
+							"guid": "C9AA47BA458DF5BA6EEDA4A815C3FD40",
+							"name": "Value",
 							"type":
 							{
 								"type": "int"
@@ -74,38 +71,95 @@
 							"sub_pins": []
 						},
 						{
-							"guid": "14E004484E5D1D151C7547BBF641495E",
-							"name": "bool",
+							"guid": "294598C7472A1A065A5EEDBC13F7E7DA",
+							"name": "Out",
 							"type":
 							{
-								"type": "bool"
-							},
-							"direction": 0,
-							"value": false,
-							"linked_to": [],
-							"sub_pins": []
-						},
-						{
-							"guid": "9FF687214F860062E92E1B8C2A955B55",
-							"name": "Wild",
-							"type":
-							{
-								"type": "wildcard"
-							},
-							"direction": 0,
-							"value": "",
-							"linked_to": [],
-							"sub_pins": []
-						},
-						{
-							"guid": "2FAD70124C58D4169838E5BBC960FA4A",
-							"name": "Wild",
-							"type":
-							{
-								"type": "wildcard"
+								"type": "exec"
 							},
 							"direction": 1,
+							"linked_to": [
+								{
+									"node": "B5266C9E43AD928731DFC690919A1D94",
+									"pin": "F1F38F16483F94D5BB63A5A6ED26434B"
+								}
+							],
+							"sub_pins": []
+						}
+					]
+				},
+				{
+					"guid": "B5266C9E43AD928731DFC690919A1D94",
+					"type": "YAsyncNode",
+					"Property":
+					{
+						"HasBeenChecked": false,
+						"NodeDescription": ""
+					},
+					"pins": [
+						{
+							"guid": "F1F38F16483F94D5BB63A5A6ED26434B",
+							"name": "In",
+							"type":
+							{
+								"type": "exec"
+							},
+							"direction": 0,
 							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "69A718F0446C3FC819755288ACA2ED7B",
+							"name": "Value",
+							"type":
+							{
+								"type": "int"
+							},
+							"direction": 0,
+							"value": 3,
+							"linked_to": [],
+							"sub_pins": []
+						},
+						{
+							"guid": "048E1EAF4629756FBA4DD9A5D54A8067",
+							"name": "Out",
+							"type":
+							{
+								"type": "exec"
+							},
+							"direction": 1,
+							"linked_to": [
+								{
+									"node": "71E9A489416715A19AEB2884A605CC7D",
+									"pin": "C696ACA9450E6CDD3AED1392162FB89A"
+								}
+							],
+							"sub_pins": []
+						}
+					]
+				},
+				{
+					"guid": "EB89BD6B4FB94209785F3AA2654F6C32",
+					"type": "FlowStartNode",
+					"Property":
+					{
+						"NodeDescription": ""
+					},
+					"pins": [
+						{
+							"guid": "A57614E844038EE9621E86A38EA70744",
+							"name": "Out",
+							"type":
+							{
+								"type": "exec"
+							},
+							"direction": 1,
+							"linked_to": [
+								{
+									"node": "EF9DC965463C93AAE9CABAA0E451A96C",
+									"pin": "11883FE64A5290EE105F54929FEEB330"
+								}
+							],
 							"sub_pins": []
 						}
 					]

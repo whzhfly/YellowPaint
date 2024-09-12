@@ -127,7 +127,7 @@ void SYellowPaintGraphNode::UpdateGraphNode()
 		[
 			SNew(SBorder)
 			/*.BorderImage(FFlowEditorStyle::GetBrush("Flow.Node.Title"))*/
-			.BorderImage(FYellowPaintEditorStyle::Get().GetBrush("ClassThumbnail.NarrativeTask")) // todo
+			.BorderImage(FYellowPaintEditorStyle::Get().GetBrush("Flow.Node.Title")) // todo
 			// The extra margin on the right is for making the color spill stretch well past the node title
 			.Padding(FMargin(10, 5, 30, 3))
 			.BorderBackgroundColor(this, &SYellowPaintGraphNode::GetBorderBackgroundColor)
@@ -169,7 +169,7 @@ void SYellowPaintGraphNode::UpdateGraphNode()
 			[
 				SNew(SBorder)
 					/*.BorderImage(FFlowEditorStyle::GetBrush("Flow.Node.Title"))*/
-					.BorderImage(FYellowPaintEditorStyle::Get().GetBrush("ClassThumbnail.NarrativeTask"))
+					.BorderImage(FYellowPaintEditorStyle::Get().GetBrush("Flow.Node.Title"))
 					.Padding(FMargin(75.0f, 22.0f)) // Saving enough space for a 'typical' title so the transition isn't quite so abrupt
 					.BorderBackgroundColor(this, &SGraphNode::GetNodeTitleColor)
 			]
@@ -613,5 +613,120 @@ FReply SYellowPaintGraphNode::OnAddFlowPin(const EEdGraphPinDirection Direction)
 
 	return FReply::Handled();
 }
+
+const FSlateBrush* SYellowPaintGraphNode::GetNodeBodyBrush() const
+{
+	return FYellowPaintEditorStyle::Get().GetBrush("Flow.Node.Body");
+}
+
+FSlateColor SYellowPaintGraphNode::GetNodeTitleColor() const
+{
+	FLinearColor ReturnTitleColor = GraphNode->IsDeprecated() ? FLinearColor::Red : GetNodeObj()->GetNodeTitleColor();
+
+	ReturnTitleColor.A = FadeCurve.GetLerp();
+
+	/*if (FlowGraphNode->GetSignalMode() == EFlowSignalMode::Enabled)
+	{
+		ReturnTitleColor.A = FadeCurve.GetLerp();
+	}
+	else
+	{
+		ReturnTitleColor *= FLinearColor(0.5f, 0.5f, 0.5f, 0.4f);
+	}
+
+	if (!IsFlowGraphNodeSelected(FlowGraphNode) && FlowGraphNode->IsSubNode())
+	{
+		ReturnTitleColor *= UnselectedNodeTint;
+	}*/
+
+	return ReturnTitleColor;
+}
+
+FSlateColor SYellowPaintGraphNode::GetNodeBodyColor() const
+{
+	FLinearColor ReturnBodyColor = GraphNode->GetNodeBodyTintColor();
+	ReturnBodyColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.5f); 
+	/*if (FlowGraphNode->GetSignalMode() != EFlowSignalMode::Enabled)
+	{
+		ReturnBodyColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.5f); 
+	}
+	else if (!IsFlowGraphNodeSelected(FlowGraphNode) && FlowGraphNode->IsSubNode())
+	{
+		ReturnBodyColor *= UnselectedNodeTint;
+	}*/
+
+	return ReturnBodyColor;
+}
+
+FSlateColor SYellowPaintGraphNode::GetNodeTitleIconColor() const
+{
+	FLinearColor ReturnIconColor = IconColor;
+	ReturnIconColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f); 
+	/*if (FlowGraphNode->GetSignalMode() != EFlowSignalMode::Enabled)
+	{
+		ReturnIconColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f); 
+	}
+	else if (!IsFlowGraphNodeSelected(FlowGraphNode) && FlowGraphNode->IsSubNode())
+	{
+		ReturnIconColor *= UnselectedNodeTint;
+	}*/
+
+	return ReturnIconColor;
+}
+
+FLinearColor SYellowPaintGraphNode::GetNodeTitleTextColor() const
+{
+	FLinearColor ReturnTextColor = FLinearColor::White;
+	ReturnTextColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f); 
+	/*if (FlowGraphNode->GetSignalMode() != EFlowSignalMode::Enabled)
+	{
+		ReturnTextColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f); 
+	}
+	else if (!IsFlowGraphNodeSelected(FlowGraphNode) && FlowGraphNode->IsSubNode())
+	{
+		ReturnTextColor *= UnselectedNodeTint;
+	}*/
+
+	return ReturnTextColor;
+}
+
+
+/*
+TSharedPtr<SWidget> SYellowPaintGraphNode::GetEnabledStateWidget() const
+{
+	if (FlowGraphNode->IsSubNode())
+	{
+		// SubNodes don't get enabled/disabled on their own,
+		//  they follow the enabled/disabled setting of their owning flow node
+
+		return TSharedPtr<SWidget>();
+	}
+
+	if (FlowGraphNode->GetSignalMode() != EFlowSignalMode::Enabled && !GraphNode->IsAutomaticallyPlacedGhostNode())
+	{
+		const bool bPassThrough = FlowGraphNode->GetSignalMode() == EFlowSignalMode::PassThrough;
+		const FText StatusMessage = bPassThrough ? LOCTEXT("PassThrough", "Pass Through") : LOCTEXT("DisabledNode", "Disabled");
+		const FText StatusMessageTooltip = bPassThrough ?
+			LOCTEXT("PassThroughTooltip", "This node won't execute internal logic, but it will trigger all connected outputs") :
+			LOCTEXT("DisabledNodeTooltip", "This node is disabled and will not be executed");
+
+		return SNew(SBorder)
+			.BorderImage(FAppStyle::GetBrush(bPassThrough ? "Graph.Node.DevelopmentBanner" : "Graph.Node.DisabledBanner"))
+			.HAlign(HAlign_Fill)
+			.VAlign(VAlign_Fill)
+			[
+				SNew(STextBlock)
+				.Text(StatusMessage)
+				.ToolTipText(StatusMessageTooltip)
+				.Justification(ETextJustify::Center)
+				.ColorAndOpacity(FLinearColor::White)
+				.ShadowOffset(FVector2D::UnitVector)
+				.Visibility(EVisibility::Visible)
+			];
+	}
+
+	return TSharedPtr<SWidget>();
+}
+*/
 
 #undef LOCTEXT_NAMESPACE
