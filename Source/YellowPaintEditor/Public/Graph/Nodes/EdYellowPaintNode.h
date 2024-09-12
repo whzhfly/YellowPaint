@@ -25,4 +25,5 @@ public:
 	virtual FText GetNodeTitleText() const;
 	// todo
 	virtual void AllocateDefaultPins();
+	
 };

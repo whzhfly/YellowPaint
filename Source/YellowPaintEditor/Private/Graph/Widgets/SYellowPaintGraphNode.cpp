@@ -3,8 +3,27 @@
 
 #include "Graph/Widgets//SYellowPaintGraphNode.h"
 #include "Style/YellowPaintEditorStyle.h"
+#include "SLevelOfDetailBranchNode.h"
+#include "GraphEditorSettings.h"
+#include "TutorialMetaData.h"
+#include "SCommentBubble.h"
+#include "ScopedTransaction.h"
+#include "SGraphNode.h"
+#include "SGraphPanel.h"
+#include "SGraphPin.h"
+#include "SLevelOfDetailBranchNode.h"
+#include "SNodePanel.h"
+#include "Styling/SlateColor.h"
+#include "TutorialMetaData.h"
+#include "Widgets/Images/SImage.h"
+#include "Widgets/Input/SButton.h"
+#include "Widgets/Layout/SBorder.h"
+#include "Widgets/SBoxPanel.h"
+#include "Widgets/SOverlay.h"
+#include "Widgets/SToolTip.h"
+#include "Widgets/Text/SInlineEditableTextBlock.h"
 
-
+#define LOCTEXT_NAMESPACE "SYellowPaintGraphNode"
 
 
 void SYellowPaintGraphNode::Construct(const FArguments& InArgs, UEdYellowPaintNode* InNode)
@@ -13,6 +32,51 @@ void SYellowPaintGraphNode::Construct(const FArguments& InArgs, UEdYellowPaintNo
 	GraphNode = InNode;
 	UpdateGraphNode();
 }
+
+FMargin SYellowPaintGraphNode::ComputeSubNodeChildIndentPaddingMargin() const
+{
+	return FMargin();
+	/*if (!IsValid(PointNode) || !PointNode->IsSubNode())
+	{
+		return FMargin();
+	}*/
+
+	/*
+	const UEdYellowPaintNode* CurrentAncestor = PointNode->GetParentNode();
+
+	// Compute the parent depth, so it can be used to determine the indent level for this subnode
+	int32 ParentDepth = 0;
+	while (IsValid(CurrentAncestor))
+	{
+		++ParentDepth;
+
+		CurrentAncestor = CurrentAncestor->GetParentNode();
+	}
+
+	constexpr float VerticalDefaultPadding = 2.0f;
+	constexpr float HorizontalDefaultPadding = 2.0f;
+	constexpr float IndentedHorizontalPadding = 6.0f;
+	constexpr float RightPadding = HorizontalDefaultPadding;
+	float LeftPadding = HorizontalDefaultPadding;
+
+	if (ParentDepth > 0)
+	{
+		// Increase the padding by the parent depth for this node
+		LeftPadding = IndentedHorizontalPadding * ParentDepth;
+	}
+	else
+	{
+		LeftPadding = 0.0f;
+	}
+
+	return
+		FMargin(
+			LeftPadding,
+			VerticalDefaultPadding,
+			RightPadding,
+			VerticalDefaultPadding);*/
+}
+
 
 void SYellowPaintGraphNode::UpdateGraphNode()
 {
@@ -35,9 +99,192 @@ void SYellowPaintGraphNode::UpdateGraphNode()
 	//	    |       |      | T (>) |
 	//	    |_______|______|_______|
 	//
-	
 
-	FSlateRenderTransform QuantityRender;
+	TSharedPtr<SVerticalBox> MainVerticalBox;
+	SetupErrorReporting();
+
+	const TSharedPtr<SNodeTitle> NodeTitle = SNew(SNodeTitle, GraphNode);
+
+	// Get node icon
+	IconColor = FLinearColor::White;
+	const FSlateBrush* IconBrush = nullptr;
+	if (GraphNode && GraphNode->ShowPaletteIconOnNode())
+	{
+		IconBrush = GraphNode->GetIconAndTint(IconColor).GetOptionalIcon();
+	}
+
+	// Compute the SubNode padding indent based on the parentage depth for this node
+	const FMargin NodePadding = ComputeSubNodeChildIndentPaddingMargin();
+
+	const TSharedRef<SOverlay> DefaultTitleAreaWidget = SNew(SOverlay)
+	+ SOverlay::Slot()
+	.HAlign(HAlign_Fill)
+	.VAlign(VAlign_Center)
+	[
+		SNew(SHorizontalBox)
+		+ SHorizontalBox::Slot()
+		.HAlign(HAlign_Fill)
+		[
+			SNew(SBorder)
+			/*.BorderImage(FFlowEditorStyle::GetBrush("Flow.Node.Title"))*/
+			.BorderImage(FYellowPaintEditorStyle::Get().GetBrush("ClassThumbnail.NarrativeTask")) // todo
+			// The extra margin on the right is for making the color spill stretch well past the node title
+			.Padding(FMargin(10, 5, 30, 3))
+			.BorderBackgroundColor(this, &SYellowPaintGraphNode::GetBorderBackgroundColor)
+			[
+				SNew(SHorizontalBox)
+				+ SHorizontalBox::Slot()
+					.VAlign(VAlign_Top)
+					.Padding(FMargin(0.f, 0.f, 4.f, 0.f))
+					.AutoWidth()
+					[
+						SNew(SImage)
+						.Image(IconBrush)
+						.ColorAndOpacity(this, &SYellowPaintGraphNode::GetNodeTitleIconColor)
+					]
+				+ SHorizontalBox::Slot()
+					[
+						SNew(SVerticalBox)
+						+ SVerticalBox::Slot()
+							.AutoHeight()
+							[
+								CreateTitleWidget(NodeTitle)
+							]
+						+ SVerticalBox::Slot()
+							.AutoHeight()
+							[
+								NodeTitle.ToSharedRef()
+							]
+					]
+			]
+		]
+	];
+
+	SetDefaultTitleAreaWidget(DefaultTitleAreaWidget);
+
+	const TSharedRef<SWidget> TitleAreaWidget = 
+		SNew(SLevelOfDetailBranchNode)
+			.UseLowDetailSlot(this, &SYellowPaintGraphNode::UseLowDetailNodeTitles)
+			.LowDetail()
+			[
+				SNew(SBorder)
+					/*.BorderImage(FFlowEditorStyle::GetBrush("Flow.Node.Title"))*/
+					.BorderImage(FYellowPaintEditorStyle::Get().GetBrush("ClassThumbnail.NarrativeTask"))
+					.Padding(FMargin(75.0f, 22.0f)) // Saving enough space for a 'typical' title so the transition isn't quite so abrupt
+					.BorderBackgroundColor(this, &SGraphNode::GetNodeTitleColor)
+			]
+			.HighDetail()
+			[
+				DefaultTitleAreaWidget
+			];
+
+	// Setup a meta tag for this node
+	FGraphNodeMetaData TagMeta(TEXT("FlowGraphNode"));
+	PopulateMetaTag(&TagMeta);
+
+	this->ContentScale.Bind(this, &SGraphNode::GetContentScale);
+
+	const TSharedPtr<SVerticalBox> InnerVerticalBox = SNew(SVerticalBox)
+		+ SVerticalBox::Slot()
+			.AutoHeight()
+			.HAlign(HAlign_Fill)
+			.VAlign(VAlign_Top)
+			.Padding(Settings->GetNonPinNodeBodyPadding())
+			[
+				TitleAreaWidget
+			]
+		+ SVerticalBox::Slot()
+			.AutoHeight()
+			.HAlign(HAlign_Fill)
+			.VAlign(VAlign_Top)
+			[
+				CreateNodeContentArea()
+			];
+
+
+	const TSharedPtr<SWidget> EnabledStateWidget = GetEnabledStateWidget();
+	if (EnabledStateWidget.IsValid())
+	{
+		InnerVerticalBox->AddSlot()
+			.AutoHeight()
+			.HAlign(HAlign_Fill)
+			.VAlign(VAlign_Top)
+			.Padding(FMargin(2, 0))
+			[
+				EnabledStateWidget.ToSharedRef()
+			];
+	}
+
+	InnerVerticalBox->AddSlot()
+		.AutoHeight()
+		.Padding(Settings->GetNonPinNodeBodyPadding())
+		[
+			ErrorReporting->AsWidget()
+		];
+
+	this->GetOrAddSlot(ENodeZone::Center)
+		.HAlign(HAlign_Center)
+		.VAlign(VAlign_Center)
+		[
+			SAssignNew(MainVerticalBox, SVerticalBox)
+			+ SVerticalBox::Slot()
+			.AutoHeight()
+			.Padding(FMargin(NodePadding.Left, 0.0f, NodePadding.Right, 0.0f))
+			[
+				SNew(SOverlay)
+					.AddMetaData<FGraphNodeMetaData>(TagMeta)
+					+ SOverlay::Slot()
+						.Padding(Settings->GetNonPinNodeBodyPadding())
+						[
+							SNew(SImage)
+							.Image(GetNodeBodyBrush())
+							.ColorAndOpacity(this, &SYellowPaintGraphNode::GetNodeBodyColor)
+						]
+					+ SOverlay::Slot()
+						[
+							InnerVerticalBox.ToSharedRef()
+						]
+			]
+		];
+
+	if (GraphNode && GraphNode->SupportsCommentBubble())
+	{
+		// Create comment bubble
+		TSharedPtr<SCommentBubble> CommentBubble;
+		const FSlateColor CommentColor = GetDefault<UGraphEditorSettings>()->DefaultCommentNodeTitleColor;
+
+		SAssignNew(CommentBubble, SCommentBubble)
+			.GraphNode(GraphNode)
+			.Text(this, &SGraphNode::GetNodeComment)
+			.OnTextCommitted(this, &SGraphNode::OnCommentTextCommitted)
+			.OnToggled(this, &SGraphNode::OnCommentBubbleToggled)
+			.ColorAndOpacity(CommentColor)
+			.AllowPinning(true)
+			.EnableTitleBarBubble(true)
+			.EnableBubbleCtrls(true)
+			.GraphLOD(this, &SGraphNode::GetCurrentLOD)
+			.IsGraphNodeHovered(this, &SGraphNode::IsHovered);
+
+		GetOrAddSlot(ENodeZone::TopCenter)
+			.SlotOffset(TAttribute<FVector2D>(CommentBubble.Get(), &SCommentBubble::GetOffset))
+			.SlotSize(TAttribute<FVector2D>(CommentBubble.Get(), &SCommentBubble::GetSize))
+			.AllowScaling(TAttribute<bool>(CommentBubble.Get(), &SCommentBubble::IsScalingAllowed))
+			.VAlign(VAlign_Top)
+			[
+				CommentBubble.ToSharedRef()
+			];
+	}
+
+	CreateBelowWidgetControls(MainVerticalBox);
+	CreatePinWidgets();
+	CreateInputSideAddButton(LeftNodeBox);
+	CreateOutputSideAddButton(RightNodeBox);
+	CreateBelowPinControls(InnerVerticalBox);
+	CreateAdvancedViewArrow(InnerVerticalBox);
+
+	
+	/// quest----------------------other
+	/*FSlateRenderTransform QuantityRender;
 	QuantityRender.SetTranslation(FVector2D(0.f, -30.f));
 
 	FSlateRenderTransform CurrentStateIconRender;
@@ -98,7 +345,7 @@ void SYellowPaintGraphNode::UpdateGraphNode()
 			.AutoHeight()
 			[
 				ComponentBox.ToSharedRef()
-			]*/
+			]#1#
 		+ SVerticalBox::Slot()
 			.AutoHeight()[
 				SNew(SHorizontalBox)
@@ -210,7 +457,7 @@ void SYellowPaintGraphNode::UpdateGraphNode()
 			];
 
 		CreatePinWidgets();
-	}
+	}*/
 }
 
 
@@ -302,3 +549,69 @@ FText SYellowPaintGraphNode::GetNodeDebugText() const
 	FText DebugMsg = FText::FromString(CountStr);
 	return DebugMsg;
 }
+
+
+FSlateColor SYellowPaintGraphNode::GetBorderBackgroundColor() const
+{
+	return SGraphNode::GetNodeTitleColor();
+}
+
+
+void SYellowPaintGraphNode::AddPinButton(TSharedPtr<SVerticalBox> OutputBox, const TSharedRef<SWidget> ButtonContent, const EEdGraphPinDirection Direction, const FString DocumentationExcerpt, const TSharedPtr<SToolTip> CustomTooltip)
+{
+	const FText PinTooltipText = (Direction == EEdGraphPinDirection::EGPD_Input) ? LOCTEXT("FlowNodeAddPinButton_InputTooltip", "Adds an input pin") : LOCTEXT("FlowNodeAddPinButton_OutputTooltip", "Adds an output pin");
+	TSharedPtr<SToolTip> Tooltip;
+
+	/*if (CustomTooltip.IsValid())
+	{
+		Tooltip = CustomTooltip;
+	}
+	else if (!DocumentationExcerpt.IsEmpty())
+	{
+		Tooltip = IDocumentation::Get()->CreateToolTip(PinTooltipText, nullptr, GraphNode->GetDocumentationLink(), DocumentationExcerpt);
+	}*/
+
+	/*const TSharedRef<SButton> AddPinButton = SNew(SButton)
+		.ContentPadding(0.0f)
+		.ButtonStyle(FAppStyle::Get(), "NoBorder")
+		.OnClicked(this, &SFlowGraphNode::OnAddFlowPin, Direction)
+		.IsEnabled(this, &SFlowGraphNode::IsNodeEditable)
+		.ToolTipText(PinTooltipText)
+		.ToolTip(Tooltip)
+		.Visibility(this, &SFlowGraphNode::IsAddPinButtonVisible)
+		[
+			ButtonContent
+		];
+
+	AddPinButton->SetCursor(EMouseCursor::Hand);
+
+	FMargin AddPinPadding = (Direction == EEdGraphPinDirection::EGPD_Input) ? Settings->GetInputPinPadding() : Settings->GetOutputPinPadding();
+	AddPinPadding.Top += 6.0f;
+
+	OutputBox->AddSlot()
+		.AutoHeight()
+		.VAlign(VAlign_Center)
+		.Padding(AddPinPadding)
+		[
+			AddPinButton
+		];*/
+}
+
+FReply SYellowPaintGraphNode::OnAddFlowPin(const EEdGraphPinDirection Direction)
+{
+	switch (Direction)
+	{
+	case EGPD_Input:
+		/*FlowGraphNode->AddUserInput();*/
+		break;
+	case EGPD_Output:
+		/*FlowGraphNode->AddUserOutput();*/
+		break;
+	default:
+		break;
+	}
+
+	return FReply::Handled();
+}
+
+#undef LOCTEXT_NAMESPACE
