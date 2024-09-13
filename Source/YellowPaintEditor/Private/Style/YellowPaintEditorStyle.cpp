@@ -48,7 +48,7 @@ void FYellowPaintEditorStyle::Initialize()
 		StyleInstance->Set("Flow.Node.ActiveShadow", new BOX_BRUSH("Icons/FlowNode_Shadow_Active", FMargin(18.0f/64.0f)));
 		StyleInstance->Set("Flow.Node.WasActiveShadow", new BOX_BRUSH("Icons/FlowNode_Shadow_WasActive", FMargin(18.0f/64.0f)));
 		
-		StyleInstance->Set(FName(TEXT("ClassThumbnail.NarrativeTask")), new IMAGE_BRUSH("NarrativeIcon64x64", Icon64));
+		StyleInstance->Set(FName(TEXT("ClassThumbnail.NarrativeTask")), new IMAGE_BRUSH("ActionIcon64x64", Icon64));
 		StyleInstance->Set(FName(TEXT("QuestEditor.FlowControl")), new IMAGE_BRUSH("CaseQuestIcon64x64", Icon64));
 		StyleInstance->Set(FName(TEXT("QuestEditor.ComponentDelete")), new IMAGE_BRUSH("QuestIcon16x16", Icon64));
 	}

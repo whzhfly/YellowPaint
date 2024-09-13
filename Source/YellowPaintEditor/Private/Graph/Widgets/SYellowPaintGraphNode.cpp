@@ -121,6 +121,12 @@ void SYellowPaintGraphNode::UpdateGraphNode()
 	const FMargin NodePadding = ComputeSubNodeChildIndentPaddingMargin();
 
 	const TSharedRef<SOverlay> DefaultTitleAreaWidget = SNew(SOverlay)
+	+SOverlay::Slot()
+	[
+		SNew(SImage)
+		.Image( FAppStyle::GetBrush("Graph.Node.TitleGloss") )
+		.ColorAndOpacity( this, &SGraphNode::GetNodeTitleIconColor )
+	]
 	+ SOverlay::Slot()
 	.HAlign(HAlign_Fill)
 	.VAlign(VAlign_Center)
@@ -134,7 +140,8 @@ void SYellowPaintGraphNode::UpdateGraphNode()
 			.BorderImage(FYellowPaintEditorStyle::Get().GetBrush("Flow.Node.Title")) // todo
 			// The extra margin on the right is for making the color spill stretch well past the node title
 			.Padding(FMargin(10, 5, 30, 3))
-			.BorderBackgroundColor(this, &SYellowPaintGraphNode::GetBorderBackgroundColor)
+			.BorderBackgroundColor( FSlateColor( FLinearColor( 1.0f, 0.0f, 1.0f, 0.0f ) ) )
+			/*.BorderBackgroundColor(this, &SYellowPaintGraphNode::GetBorderBackgroundColor)*/
 			[
 				SNew(SHorizontalBox)
 				+ SHorizontalBox::Slot()
@@ -285,183 +292,6 @@ void SYellowPaintGraphNode::UpdateGraphNode()
 	CreateOutputSideAddButton(RightNodeBox);
 	CreateBelowPinControls(InnerVerticalBox);
 	CreateAdvancedViewArrow(InnerVerticalBox);
-
-	
-	/// quest----------------------other
-	/*FSlateRenderTransform QuantityRender;
-	QuantityRender.SetTranslation(FVector2D(0.f, -30.f));
-
-	FSlateRenderTransform CurrentStateIconRender;
-	CurrentStateIconRender.SetTranslation(FVector2D(0.f, -96.f));
-	
-	UEdYellowPaintNode* PaintNode = Cast<UEdYellowPaintNode>(PointNode);
-
-	if (PaintNode)
-	{
-		auto SizeBox = SNew(SBox);
-		SizeBox->SetMinDesiredWidth(250.f);
-		SizeBox->SetMinDesiredHeight(60.f);
-		this->GetOrAddSlot(ENodeZone::Center)
-			.HAlign(HAlign_Fill)
-			.VAlign(VAlign_Fill)
-			[
-				SNew(SBorder)
-				.BorderImage(FAppStyle::GetBrush("BTEditor.Graph.BTNode.Body"))
-			.BorderBackgroundColor(this, &SYellowPaintGraphNode::GetBorderColor)
-			.OnMouseButtonDown(this, &SYellowPaintGraphNode::OnMouseDown)
-			[
-				SNew(SOverlay)
-				+ SOverlay::Slot()
-			[
-				SizeBox
-			]
-		+ SOverlay::Slot()
-			.HAlign(HAlign_Fill)
-			.VAlign(VAlign_Fill)
-			.Padding(5.f)
-			[
-				SNew(SVerticalBox)
-				+SVerticalBox::Slot()
-				.AutoHeight()[
-					SNew(SBorder)
-						.BorderImage(FAppStyle::GetBrush("BTEditor.Graph.BTNode.Body"))
-						.BorderBackgroundColor(FLinearColor::Black)
-						.Visibility(this, &SYellowPaintGraphNode::GetNodeDebugTextVis)
-						[
-							SNew(SOverlay)
-					+ SOverlay::Slot()
-						.HAlign(HAlign_Fill)
-						.VAlign(VAlign_Fill)
-						.Padding(5.f)
-						[
-							SNew(SVerticalBox)
-							+ SVerticalBox::Slot()
-						.AutoHeight()[
-							SNew(STextBlock)
-								.Text(this, &SYellowPaintGraphNode::GetNodeDebugText)
-								.Visibility(this, &SYellowPaintGraphNode::GetNodeDebugTextVis)
-								.Justification(ETextJustify::Center)
-								.TextStyle(FAppStyle::Get(), TEXT("PhysicsAssetEditor.Tools.Font"))
-								.WrapTextAt(200.f)
-						]
-				]]]
-				/*+ SVerticalBox::Slot()
-			.AutoHeight()
-			[
-				ComponentBox.ToSharedRef()
-			]#1#
-		+ SVerticalBox::Slot()
-			.AutoHeight()[
-				SNew(SHorizontalBox)
-					+ SHorizontalBox::Slot()
-					.AutoWidth()
-					.VAlign(VAlign_Center)
-					[
-						SNew(SImage)
-						.Image(SYellowPaintGraphNode::GetFlowControlIcon())
-					.Visibility(this, &SYellowPaintGraphNode::GetNodeFlowControlVis)
-					]
-
-				+ SHorizontalBox::Slot()
-					.VAlign(VAlign_Center)
-					.HAlign(HAlign_Left)
-					.AutoWidth()
-					[
-						SNew(SBox)
-						.MinDesiredHeight(10.f)
-					[
-						SAssignNew(LeftNodeBox, SVerticalBox)
-					]
-					]
-				+ SHorizontalBox::Slot()
-					.AutoWidth()
-					.VAlign(VAlign_Center)
-					[
-						SNew(SImage)
-						.Image(SYellowPaintGraphNode::GetNameIcon())
-					.Visibility(this, &SYellowPaintGraphNode::GetNodeIDVis)
-					]
-				+ SHorizontalBox::Slot()
-					.VAlign(VAlign_Fill)
-					.HAlign(HAlign_Fill)
-					.FillWidth(1.f)
-					[
-						SNew(SVerticalBox)
-						+ SVerticalBox::Slot()
-					.VAlign(VAlign_Top)
-					.HAlign(HAlign_Fill)
-					.AutoHeight()
-					[
-						SNew(STextBlock)
-						.Text(this, &SYellowPaintGraphNode::GetNodeTitleText)
-					.ColorAndOpacity(this, &SYellowPaintGraphNode::GetNodeTitleColor)
-					.Justification(ETextJustify::Center)
-					.Clipping(EWidgetClipping::Inherit)
-					.TextStyle(FAppStyle::Get(), TEXT("PhysicsAssetEditor.Tools.Font"))
-					]
-				+ SVerticalBox::Slot()
-					.VAlign(VAlign_Bottom)
-					.HAlign(HAlign_Fill)
-					.AutoHeight()
-					[
-						SNew(STextBlock)
-						.Text(this, &SYellowPaintGraphNode::GetNodeID)
-					.Visibility(this, &SYellowPaintGraphNode::GetNodeIDVis)
-					.Justification(ETextJustify::Center)
-					.WrapTextAt(200.f)
-					]
-				+ SVerticalBox::Slot()
-					.VAlign(VAlign_Bottom)
-					.HAlign(HAlign_Fill)
-					.AutoHeight()
-					[
-						SNew(STextBlock)
-						.Text(this, &SYellowPaintGraphNode::GetNodeText)
-					.Justification(ETextJustify::Center)
-					.WrapTextAt(200.f)
-					]
-					+ SVerticalBox::Slot()
-					.VAlign(VAlign_Bottom)
-					.HAlign(HAlign_Fill)
-					.AutoHeight()
-					[
-						SNew(STextBlock)
-							.Text(this, &SYellowPaintGraphNode::GetConditionText)
-							.Justification(ETextJustify::Center)
-							.WrapTextAt(200.f)
-					]
-				+ SVerticalBox::Slot()
-					.VAlign(VAlign_Center)
-					.HAlign(HAlign_Fill)
-					.FillHeight(1.f)
-					[
-						SNew(STextBlock)
-						.Text(this, &SYellowPaintGraphNode::GetEventsText)
-					.Visibility(this, &SYellowPaintGraphNode::GetEventsVis)
-					.Justification(ETextJustify::Center)
-					.AutoWrapText(true)
-					.TextStyle(FAppStyle::Get(), TEXT("PhysicsAssetEditor.Tools.Font"))
-					.ColorAndOpacity(this, &SYellowPaintGraphNode::GetEventsColor)
-					]
-					]
-				+ SHorizontalBox::Slot()
-					.VAlign(VAlign_Center)
-					.HAlign(HAlign_Right)
-					.AutoWidth()
-					[
-						SNew(SBox)
-						.MinDesiredHeight(10.f)
-					[
-						SAssignNew(RightNodeBox, SVerticalBox)
-					]
-					]
-			]
-			]
-			]
-			];
-
-		CreatePinWidgets();
-	}*/
 }
 
 
@@ -664,9 +494,9 @@ FSlateColor SYellowPaintGraphNode::GetNodeBodyColor() const
 
 FSlateColor SYellowPaintGraphNode::GetNodeTitleIconColor() const
 {
-	FLinearColor ReturnIconColor = IconColor;
-	ReturnIconColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f);
-	ReturnIconColor *= UnselectedNodeTint;
+	FLinearColor ReturnIconColor = FLinearColor::Blue;
+	/*ReturnIconColor *= UnselectedNodeTint;*/
+	/*ReturnIconColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f);*/
 	/*if (FlowGraphNode->GetSignalMode() != EFlowSignalMode::Enabled)
 	{
 		ReturnIconColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f); 
@@ -681,8 +511,8 @@ FSlateColor SYellowPaintGraphNode::GetNodeTitleIconColor() const
 
 FLinearColor SYellowPaintGraphNode::GetNodeTitleTextColor() const
 {
-	FLinearColor ReturnTextColor = FLinearColor::White;
-	ReturnTextColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f); 
+	FLinearColor ReturnTextColor = FLinearColor::Black;
+	/*ReturnTextColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f);*/ 
 	/*if (FlowGraphNode->GetSignalMode() != EFlowSignalMode::Enabled)
 	{
 		ReturnTextColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.3f); 
@@ -733,5 +563,88 @@ TSharedPtr<SWidget> SYellowPaintGraphNode::GetEnabledStateWidget() const
 	return TSharedPtr<SWidget>();
 }
 */
+
+TSharedRef<SWidget> SYellowPaintGraphNode::CreateNodeContentArea()
+{
+	// NODE CONTENT AREA
+	return SNew(SBorder)
+		.BorderImage( FAppStyle::GetBrush("NoBorder") )
+		.HAlign(HAlign_Fill)
+		.VAlign(VAlign_Fill)
+		.Padding( FMargin(0,3) )
+		[
+			SNew(SHorizontalBox)
+			+SHorizontalBox::Slot()
+			.HAlign(HAlign_Left)
+			.FillWidth(1.0f)
+			[
+				// LEFT
+				SAssignNew(LeftNodeBox, SVerticalBox)
+			]
+			+SHorizontalBox::Slot()
+			.HAlign(HAlign_Center)
+			.FillWidth(1.0f)
+			[
+				// LEFT
+				SNew(SVerticalBox)
+				+ SVerticalBox::Slot()
+				.Padding(FMargin(10, 10, 10, 10))
+				.AutoHeight()
+				[
+					/*SNew(SBorder)
+					/*.BorderImage(FAppStyle::GetBrush("BTEditor.Graph.BTNode.Body"))#1#
+					.BorderBackgroundColor(FLinearColor::Gray)
+					/*.BorderImage( FAppStyle::GetBrush("Graph.Node.ColorSpill") )#1#
+					// The extra margin on the right
+					// is for making the color spill stretch well past the node title
+					/*.Padding( FMargin(10,5,30,3) )#1#
+					/*.BorderBackgroundColor( this, &SGraphNode::GetNodeTitleColor )#1#
+					[*/
+						SNew(SOverlay)
+						+ SOverlay::Slot()
+						[
+							SNew(SHorizontalBox)
+							+ SHorizontalBox::Slot()
+							.VAlign(VAlign_Center)
+							.AutoWidth()
+							[
+								SNew(SImage)
+								.Image(FYellowPaintEditorStyle::Get().GetBrush("ClassThumbnail.FlowAsset"))
+								.Visibility(EVisibility::Visible)
+								.ColorAndOpacity(FSlateColor::UseForeground())
+								
+							]
+						]
+					//]
+				]
+			]
+			+SHorizontalBox::Slot()
+			.AutoWidth()
+			.HAlign(HAlign_Right)
+			[
+				// RIGHT
+				SAssignNew(RightNodeBox, SVerticalBox)
+			]
+		];
+}
+TSharedRef<SWidget> SYellowPaintGraphNode::CreateTitleWidget(TSharedPtr<SNodeTitle> NodeTitle)
+{
+	SAssignNew(InlineEditableText, SInlineEditableTextBlock)
+		.Style(FAppStyle::Get(), "Graph.Node.NodeTitleInlineEditableText")
+		.Text(NodeTitle.Get(), &SNodeTitle::GetHeadTitle)
+		.OnVerifyTextChanged(this, &SYellowPaintGraphNode::OnVerifyNameTextChanged)
+		.OnTextCommitted(this, &SYellowPaintGraphNode::OnNameTextCommited)
+		.IsReadOnly(this, &SYellowPaintGraphNode::IsNameReadOnly)
+		.IsSelected(this, &SYellowPaintGraphNode::IsSelectedExclusively);
+	InlineEditableText->SetColorAndOpacity(TAttribute<FLinearColor>::Create(TAttribute<FLinearColor>::FGetter::CreateSP(this, &SYellowPaintGraphNode::GetNodeTitleTextColor)));
+
+	return InlineEditableText.ToSharedRef();
+}
+
+FText SYellowPaintGraphNode::GetTitle() const
+{
+	return GraphNode ? GraphNode->GetNodeTitle(ENodeTitleType::FullTitle) : FText::GetEmpty();
+}
+
 
 #undef LOCTEXT_NAMESPACE

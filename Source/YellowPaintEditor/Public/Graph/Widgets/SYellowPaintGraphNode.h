@@ -55,6 +55,9 @@ public:
 
 public:
 
+
+	virtual FText GetTitle() const;
+	
 	virtual const FSlateBrush* GetNodeBodyBrush() const override;
 
 	// purposely overriden non-virtual methods, added PR #9791 to made these methods virtual: https://github.com/EpicGames/UnrealEngine/pull/9791
@@ -64,7 +67,12 @@ public:
 	FLinearColor GetNodeTitleTextColor() const;
 	/*TSharedPtr<SWidget> GetEnabledStateWidget() const;*/
 	// --
+protected:
+	/** Create the inner node content area, including the left/right pin boxes */
+	virtual TSharedRef<SWidget> CreateNodeContentArea();
 
+
+	virtual TSharedRef<SWidget> CreateTitleWidget(TSharedPtr<SNodeTitle> NodeTitle) override;
 	// SGraphNode
 	/*virtual void GetPinBrush(const bool bLeftSide, const float WidgetWidth, const int32 PinIndex, const FFlowPinTrait& Breakpoint, TArray<FOverlayBrushInfo>& Brushes) const;*/
 
