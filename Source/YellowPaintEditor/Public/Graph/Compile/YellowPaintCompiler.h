@@ -8,6 +8,7 @@
 
 class ULogicFlowAsset;
 class UYellowPaintGeneratedClass;
+class ULogicFlowDriverInstance;
 
 /*
  * 无效 注册没有效果
@@ -63,6 +64,7 @@ protected:
 
 
 	void CollectAllFlowNodes();
+	void DeepCopyLogicFlowDriver(ULogicFlowDriverInstance* OldObj, ULogicFlowDriverInstance* NewObj);
 
 	/** Compiler customization for Widgets */
 	/*class UQuestGraphSchema* QuestSchema;*/

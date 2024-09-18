@@ -17,4 +17,12 @@ class YELLOWPAINTEDITOR_API UEdYellowPaintGraph : public UEdGraph
 
 public:
 	UEdYellowPaintGraph(const FObjectInitializer& ObjectInitializer);
+
+
+	virtual void NotifyGraphChanged() override;
+	virtual void NotifyGraphChanged(const FEdGraphEditAction& Action) override;
+
+	void PinRewired(UEdGraphNode* Node, UEdGraphPin* Pin);
+	void NodeAdded(UEdGraphNode* AddedNode);
+
 };

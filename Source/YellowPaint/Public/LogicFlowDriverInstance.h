@@ -7,6 +7,19 @@
 #include "LogicFlowDriverInstance.generated.h"
 
 
+
+/** Enum used to define which way data flows into or out of this pin. */
+UENUM(BlueprintType)
+enum class EFlowDriverType
+{
+	Default = 0 UMETA(DisplayName = "默认"),
+	Skill = 1 UMETA(DisplayName = "技能"),
+	Buff = 2 UMETA(DisplayName = "Buff"),
+	Trigger = 3 UMETA(DisplayName = "触发器"),
+	Other = 9 UMETA(DisplayName = "其他"),
+};
+
+
 /**
  * 逻辑执行类
  * 保存所有的Node
@@ -18,12 +31,16 @@ class YELLOWPAINT_API ULogicFlowDriverInstance : public UObject
 public:
 	GENERATED_BODY()
 
+	UPROPERTY(VisibleAnywhere, DisplayName="资源类型", Category="LogicFlow")
+	EFlowDriverType DriverType = EFlowDriverType::Default;
 
+	/*
 	UPROPERTY(EditAnywhere, DisplayName="是否激活Flow")
 	bool HasBeenChecked;
 
 	UPROPERTY(EditAnywhere, DisplayName="Flow次数")
 	int ExeCount;
+	*/
 
 
 	UPROPERTY()

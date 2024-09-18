@@ -21,6 +21,7 @@
 #include "Widgets/SBoxPanel.h"
 #include "Widgets/SOverlay.h"
 #include "Widgets/SToolTip.h"
+#include "IDocumentation.h"
 #include "Widgets/Text/SInlineEditableTextBlock.h"
 
 #define LOCTEXT_NAMESPACE "SYellowPaintGraphNode"
@@ -140,7 +141,7 @@ void SYellowPaintGraphNode::UpdateGraphNode()
 			.BorderImage(FYellowPaintEditorStyle::Get().GetBrush("Flow.Node.Title")) // todo
 			// The extra margin on the right is for making the color spill stretch well past the node title
 			.Padding(FMargin(10, 5, 30, 3))
-			.BorderBackgroundColor( FSlateColor( FLinearColor( 1.0f, 0.0f, 1.0f, 0.0f ) ) )
+			.BorderBackgroundColor( FSlateColor( FLinearColor( 1.0f, 0.0f, 0.0f, 1.0f ) ) )
 			/*.BorderBackgroundColor(this, &SYellowPaintGraphNode::GetBorderBackgroundColor)*/
 			[
 				SNew(SHorizontalBox)
@@ -295,15 +296,17 @@ void SYellowPaintGraphNode::UpdateGraphNode()
 }
 
 
+/*
 FText SYellowPaintGraphNode::GetNodeTitleText() const
 {
 	UEdYellowPaintNode* Node = CastChecked<UEdYellowPaintNode>(PointNode);
 	return Node->GetNodeTitleText();
 }
+*/
 
 const FSlateBrush* SYellowPaintGraphNode::GetNameIcon() const
 {
-	return FYellowPaintEditorStyle::Get().GetBrush(TEXT("ClassThumbnail.NarrativeTask"));
+	return FYellowPaintEditorStyle::Get().GetBrush(TEXT("ClassThumbnail.LogicFlowAsset"));
 }
 const FSlateBrush* SYellowPaintGraphNode::GetFlowControlIcon() const
 {
@@ -391,28 +394,82 @@ FSlateColor SYellowPaintGraphNode::GetBorderBackgroundColor() const
 }
 
 
+void SYellowPaintGraphNode::CreateInputSideAddButton(TSharedPtr<SVerticalBox> OutputBox)
+{
+	/*if (PointNode->CanUserAddInput())
+	{
+		TSharedPtr<SWidget> AddPinWidget;
+		SAssignNew(AddPinWidget, SHorizontalBox)
+			+SHorizontalBox::Slot()
+				.AutoWidth()
+				.VAlign(VAlign_Center)
+				.Padding(0, 0, 7, 0)
+				[
+					SNew(SImage)
+						.Image(FAppStyle::GetBrush(TEXT("Icons.PlusCircle")))
+				]
+			+SHorizontalBox::Slot()
+				.AutoWidth()
+				.HAlign(HAlign_Left)
+				[
+					SNew(STextBlock)
+						.Text(LOCTEXT("FlowNodeAddPinButton", "Add pin"))
+						.ColorAndOpacity(FLinearColor::White)
+				];
+
+		AddPinButton(OutputBox, AddPinWidget.ToSharedRef(), EGPD_Input);
+	}*/
+}
+
+void SYellowPaintGraphNode::CreateOutputSideAddButton(TSharedPtr<SVerticalBox> OutputBox)
+{
+	if (PointNode->CanUserAddOutput())
+	{
+		TSharedPtr<SWidget> AddPinWidget;
+		SAssignNew(AddPinWidget, SHorizontalBox)
+			+SHorizontalBox::Slot()
+			.AutoWidth()
+			.HAlign(HAlign_Left)
+			[
+				SNew(STextBlock)
+					.Text(LOCTEXT("FlowNodeAddPinButton", "Add pin"))
+					.ColorAndOpacity(FLinearColor::White)
+			]
+			+SHorizontalBox::Slot()
+			.AutoWidth()
+			.VAlign(VAlign_Center)
+			.Padding(7, 0, 0, 0)
+			[
+				SNew(SImage)
+					.Image(FAppStyle::GetBrush(TEXT("Icons.PlusCircle")))
+			];
+
+		AddPinButton(OutputBox, AddPinWidget.ToSharedRef(), EGPD_Output);
+	}
+}
+
 void SYellowPaintGraphNode::AddPinButton(TSharedPtr<SVerticalBox> OutputBox, const TSharedRef<SWidget> ButtonContent, const EEdGraphPinDirection Direction, const FString DocumentationExcerpt, const TSharedPtr<SToolTip> CustomTooltip)
 {
 	const FText PinTooltipText = (Direction == EEdGraphPinDirection::EGPD_Input) ? LOCTEXT("FlowNodeAddPinButton_InputTooltip", "Adds an input pin") : LOCTEXT("FlowNodeAddPinButton_OutputTooltip", "Adds an output pin");
 	TSharedPtr<SToolTip> Tooltip;
 
-	/*if (CustomTooltip.IsValid())
+	if (CustomTooltip.IsValid())
 	{
 		Tooltip = CustomTooltip;
 	}
 	else if (!DocumentationExcerpt.IsEmpty())
 	{
 		Tooltip = IDocumentation::Get()->CreateToolTip(PinTooltipText, nullptr, GraphNode->GetDocumentationLink(), DocumentationExcerpt);
-	}*/
+	}
 
-	/*const TSharedRef<SButton> AddPinButton = SNew(SButton)
+	const TSharedRef<SButton> AddPinButton = SNew(SButton)
 		.ContentPadding(0.0f)
 		.ButtonStyle(FAppStyle::Get(), "NoBorder")
-		.OnClicked(this, &SFlowGraphNode::OnAddFlowPin, Direction)
-		.IsEnabled(this, &SFlowGraphNode::IsNodeEditable)
+		.OnClicked(this, &SYellowPaintGraphNode::OnAddFlowPin, Direction)
+		.IsEnabled(this, &SYellowPaintGraphNode::IsNodeEditable)
 		.ToolTipText(PinTooltipText)
 		.ToolTip(Tooltip)
-		.Visibility(this, &SFlowGraphNode::IsAddPinButtonVisible)
+		.Visibility(this, &SYellowPaintGraphNode::IsAddPinButtonVisible)
 		[
 			ButtonContent
 		];
@@ -428,7 +485,7 @@ void SYellowPaintGraphNode::AddPinButton(TSharedPtr<SVerticalBox> OutputBox, con
 		.Padding(AddPinPadding)
 		[
 			AddPinButton
-		];*/
+		];
 }
 
 FReply SYellowPaintGraphNode::OnAddFlowPin(const EEdGraphPinDirection Direction)
@@ -439,7 +496,7 @@ FReply SYellowPaintGraphNode::OnAddFlowPin(const EEdGraphPinDirection Direction)
 		/*FlowGraphNode->AddUserInput();*/
 		break;
 	case EGPD_Output:
-		/*FlowGraphNode->AddUserOutput();*/
+		PointNode->AddUserOutput();
 		break;
 	default:
 		break;
@@ -479,7 +536,7 @@ FSlateColor SYellowPaintGraphNode::GetNodeTitleColor() const
 FSlateColor SYellowPaintGraphNode::GetNodeBodyColor() const
 {
 	FLinearColor ReturnBodyColor = GraphNode->GetNodeBodyTintColor();
-	ReturnBodyColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.5f); 
+	ReturnBodyColor *= FLinearColor(0.0f, 1.0f, 1.0f, 0.5f); 
 	/*if (FlowGraphNode->GetSignalMode() != EFlowSignalMode::Enabled)
 	{
 		ReturnBodyColor *= FLinearColor(1.0f, 1.0f, 1.0f, 0.5f); 
@@ -609,7 +666,7 @@ TSharedRef<SWidget> SYellowPaintGraphNode::CreateNodeContentArea()
 							.AutoWidth()
 							[
 								SNew(SImage)
-								.Image(FYellowPaintEditorStyle::Get().GetBrush("ClassThumbnail.FlowAsset"))
+								.Image(FYellowPaintEditorStyle::Get().GetBrush("Flow.Node.ClassIcon"))
 								.Visibility(EVisibility::Visible)
 								.ColorAndOpacity(FSlateColor::UseForeground())
 								

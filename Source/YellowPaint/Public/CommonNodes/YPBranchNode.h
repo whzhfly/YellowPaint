@@ -23,7 +23,7 @@ public:
 
 	void CollectionAllocatePin_Implementation() override;
 	
-	UPROPERTY(EditAnywhere, DisplayName="次数")
+	UPROPERTY(EditAnywhere, Category="Flow", DisplayName="次数")
 	int ExeCount;
 };
 
@@ -56,7 +56,7 @@ public:
 	void CollectionAllocatePin_Implementation() override;
 	
 public:
-	UPROPERTY(EditAnywhere, DisplayName="异步")
+	UPROPERTY(EditAnywhere, Category="Flow", DisplayName="异步")
 	bool HasBeenChecked;
 };
 
@@ -79,5 +79,13 @@ class YELLOWPAINT_API UFlowEndNode : public ULogicFlowNode
 
 public:
 	void CollectionAllocatePin_Implementation() override;
+
+};
+
+UCLASS()
+class YELLOWPAINT_API UFlowCheckNode : public ULogicFlowNode
+{
+	GENERATED_BODY()
+	
 
 };

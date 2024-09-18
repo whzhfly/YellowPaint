@@ -6,7 +6,7 @@
 
 
 
-FText UEdYellowPaintNode::GetNodeTitleText() const
+FText UEdYellowPaintNode::GetFlowNodeTitleText() const
 {
 	if (FlowNode.Get())
 	{
@@ -25,4 +25,39 @@ void UEdYellowPaintNode::AllocateDefaultPins()
 		}
 	}
 	
+}
+
+
+// =======================================
+FText UEdYellowPaintNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
+{
+	return GetFlowNodeTitleText();
+}
+
+void UEdYellowPaintNode::AddUserOutput()
+{
+	if (FlowNode.Get())
+	{
+		CreatePin(EGPD_Output, TEXT("Narrator"), TEXT("11"));
+	}
+	GetGraph()->NotifyGraphChanged();
+}
+
+
+bool UEdYellowPaintNode::CanUserAddInput() const
+{
+	if (FlowNode.Get())
+	{
+		return true;
+	}
+	return false;
+}
+
+bool UEdYellowPaintNode::CanUserAddOutput() const
+{
+	if (FlowNode.Get())
+	{
+		return true;
+	}
+	return false;
 }

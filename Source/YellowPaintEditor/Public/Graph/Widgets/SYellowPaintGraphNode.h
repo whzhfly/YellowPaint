@@ -35,7 +35,7 @@ public:
 	TObjectPtr<UEdYellowPaintNode> PointNode;
 	virtual void UpdateGraphNode() override;
 	// other style info
-	FText GetNodeTitleText() const;
+	/*FText GetNodeTitleText() const;*/
 	
 	const FSlateBrush* GetFlowControlIcon() const;
 	const FSlateBrush* GetComponentDeleteIcon() const;
@@ -72,6 +72,9 @@ protected:
 	virtual TSharedRef<SWidget> CreateNodeContentArea();
 
 
+   virtual void CreateInputSideAddButton(TSharedPtr<SVerticalBox> OutputBox) override;
+	virtual void CreateOutputSideAddButton(TSharedPtr<SVerticalBox> OutputBox) override;
+	
 	virtual TSharedRef<SWidget> CreateTitleWidget(TSharedPtr<SNodeTitle> NodeTitle) override;
 	// SGraphNode
 	/*virtual void GetPinBrush(const bool bLeftSide, const float WidgetWidth, const int32 PinIndex, const FFlowPinTrait& Breakpoint, TArray<FOverlayBrushInfo>& Brushes) const;*/

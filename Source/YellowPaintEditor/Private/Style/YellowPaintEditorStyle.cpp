@@ -9,10 +9,15 @@
 #include "Slate/SlateGameResources.h"
 #include "Interfaces/IPluginManager.h"
 #include "Styling/SlateStyleMacros.h"
+#include "Styling/SlateStyleRegistry.h"
 
 /*#define RootToContentDir Style->RootToContentDir*/
 
 
+#define BORDER_BRUSH( RelativePath, ... ) FSlateBorderBrush( StyleInstance->RootToContentDir( RelativePath, TEXT(".png") ), __VA_ARGS__ )
+#define BOX_BRUSH( RelativePath, ... ) FSlateBoxBrush( StyleInstance->RootToContentDir( RelativePath, TEXT(".png") ), __VA_ARGS__ )
+#define IMAGE_BRUSH( RelativePath, ... ) FSlateImageBrush( StyleInstance->RootToContentDir( RelativePath, TEXT(".png") ), __VA_ARGS__ )
+#define IMAGE_BRUSH_SVG( RelativePath, ... ) FSlateVectorImageBrush(StyleInstance->RootToContentDir(RelativePath, TEXT(".svg")), __VA_ARGS__)
 
 TSharedPtr<FSlateStyleSet> FYellowPaintEditorStyle::StyleInstance = nullptr;
 
@@ -38,17 +43,24 @@ void FYellowPaintEditorStyle::Initialize()
 	{
 
 		// Flow assets
-		StyleInstance->SetContentRoot(IPluginManager::Get().FindPlugin(TEXT("Flow"))->GetBaseDir() / TEXT("Resources"));
+		StyleInstance->SetContentRoot(IPluginManager::Get().FindPlugin("YellowPaint")->GetBaseDir() / TEXT("Resources"));
+		
+		// StyleInstance->SetContentRoot(IPluginManager::Get().FindPlugin(TEXT("Flow"))->GetBaseDir() / TEXT("Resources"));
 
-		StyleInstance->Set("ClassIcon.FlowAsset", new IMAGE_BRUSH("Icons/FlowAsset_16x", Icon16));
-		StyleInstance->Set("ClassThumbnail.FlowAsset", new IMAGE_BRUSH("Icons/FlowAsset_64x", Icon64));
+		StyleInstance->Set("ClassIcon.LogicFlowAsset", new IMAGE_BRUSH("Icons/FlowAsset_16x", Icon16));
+		StyleInstance->Set("ClassThumbnail.LogicFlowAsset", new IMAGE_BRUSH("Icons/FlowAsset_64x", Icon64));
 		
 		StyleInstance->Set("Flow.Node.Title", new BOX_BRUSH("Icons/FlowNode_Title", FMargin(8.0f/64.0f, 0, 0, 0)));
 		StyleInstance->Set("Flow.Node.Body", new BOX_BRUSH("Icons/FlowNode_Body", FMargin(16.f/64.f)));
 		StyleInstance->Set("Flow.Node.ActiveShadow", new BOX_BRUSH("Icons/FlowNode_Shadow_Active", FMargin(18.0f/64.0f)));
 		StyleInstance->Set("Flow.Node.WasActiveShadow", new BOX_BRUSH("Icons/FlowNode_Shadow_WasActive", FMargin(18.0f/64.0f)));
+
+
+		StyleInstance->Set("Flow.Node.ClassIcon", new IMAGE_BRUSH(TEXT("ActionIcon64x64"), Icon64));
+
+		StyleInstance->Set("ClassIcon.FlowAsset", new IMAGE_BRUSH(TEXT("Icons/FlowAsset_16x"), Icon16));
 		
-		StyleInstance->Set(FName(TEXT("ClassThumbnail.NarrativeTask")), new IMAGE_BRUSH("ActionIcon64x64", Icon64));
+		/*StyleInstance->Set(FName(TEXT("ClassThumbnail.NarrativeTask")), new IMAGE_BRUSH("ActionIcon64x64", Icon64));*/
 		StyleInstance->Set(FName(TEXT("QuestEditor.FlowControl")), new IMAGE_BRUSH("CaseQuestIcon64x64", Icon64));
 		StyleInstance->Set(FName(TEXT("QuestEditor.ComponentDelete")), new IMAGE_BRUSH("QuestIcon16x16", Icon64));
 	}
@@ -71,7 +83,6 @@ FName FYellowPaintEditorStyle::GetStyleSetName()
 TSharedRef<FSlateStyleSet> FYellowPaintEditorStyle::Create()
 {
 	TSharedRef< FSlateStyleSet > Style = MakeShareable(new FSlateStyleSet("YellowPaintStyle"));
-	Style->SetContentRoot(IPluginManager::Get().FindPlugin("YellowPaint")->GetBaseDir() / TEXT("Resources"));
 	return Style;
 }
 

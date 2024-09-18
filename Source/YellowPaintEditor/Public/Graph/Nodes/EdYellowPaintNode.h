@@ -22,7 +22,24 @@ public:
 
 	virtual FLinearColor GetGraphNodeColor() const { return FLinearColor(0.15f, 0.15f, 0.15f); };
 
-	virtual FText GetNodeTitleText() const;
+	// UEdGraphNode
+	//virtual void GetNodeContextMenuActions(class UToolMenu* Menu, class UGraphNodeContextMenuContext* Context) const override;
+	//virtual bool CanUserDeleteNode() const override;
+	//virtual bool CanDuplicateNode() const override;
+	//virtual TSharedPtr<SGraphNode> CreateVisualWidget() override;
+	virtual FText GetNodeTitle(ENodeTitleType::Type TitleType) const override;
+	//virtual FLinearColor GetNodeTitleColor() const override;
+	//virtual FSlateIcon GetIconAndTint(FLinearColor& OutColor) const override;
+	//virtual bool ShowPaletteIconOnNode() const override { return true; }
+	//virtual FText GetTooltipText() const override;
+	// --
+
+	void AddUserOutput();
+
+	bool CanUserAddInput() const;
+	bool CanUserAddOutput() const;
+	
+	virtual FText GetFlowNodeTitleText() const;
 	// todo
 	virtual void AllocateDefaultPins();
 	

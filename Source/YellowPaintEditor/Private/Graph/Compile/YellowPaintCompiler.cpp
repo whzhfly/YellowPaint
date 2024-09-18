@@ -138,7 +138,7 @@ void FYellowPaintCompilerContext::CopyTermDefaultsToDefaultObject(UObject* Defau
 			ULogicFlowDriverInstance* Instance = FlowAsset->FlowInstance;
 			auto NewObj = FlowAsset->GeneratedClass->ClassDefaultObject;
 			ULogicFlowDriverInstance* NewInstance = Cast<ULogicFlowDriverInstance>(DuplicateObject(NewObj, GetTransientPackage()));
-			Instance->DeepCopyFormAnother(NewInstance);
+			DeepCopyLogicFlowDriver(NewInstance, Instance);
 			/*
 			if (NewInstance != nullptr)
 			{
@@ -151,6 +151,15 @@ void FYellowPaintCompilerContext::CopyTermDefaultsToDefaultObject(UObject* Defau
 ULogicFlowAsset* FYellowPaintCompilerContext::GetFlowAsset() const
 {
 	return Cast<ULogicFlowAsset>(Blueprint);
+}
+
+void FYellowPaintCompilerContext::DeepCopyLogicFlowDriver(ULogicFlowDriverInstance* OldObj, ULogicFlowDriverInstance* NewObj)
+{
+	UEditorEngine::FCopyPropertiesForUnrelatedObjectsParams CopyDetails;
+	CopyDetails.bCopyDeprecatedProperties = Blueprint->bIsRegeneratingOnLoad;
+	CopyDetails.bNotifyObjectReplacement = true; 
+	UEditorEngine::CopyPropertiesForUnrelatedObjects(OldObj, NewObj, CopyDetails);
+	NewObj->DeepCopyFormAnother(OldObj);
 }
 
 
@@ -219,10 +228,10 @@ void FYellowPaintCompilerContext::FinishCompilingClass(UClass* Class)
 		}
 		if (LogicDriver != nullptr && FlowAsset->FlowInstance)
 		{
-			if (FlowAsset->FlowInstance.Get()->ExeCount == 0)
+			/*if (FlowAsset->FlowInstance.Get()->ExeCount == 0)
 			{
 				FlowAsset->FlowInstance.Get()->ExeCount = 100;
-			}
+			}*/
 			/*DuplicateObject(LogicDriver, FlowAsset->FlowInstance);*/
 
 			GeneratedClass->FlowDriverInstance = FlowAsset->FlowInstance;

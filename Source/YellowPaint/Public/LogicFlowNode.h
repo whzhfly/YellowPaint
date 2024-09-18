@@ -17,7 +17,7 @@ class YELLOWPAINT_API ULogicFlowNode : public UObject
 
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "YP", meta = (MultiLine = "true"), DisplayName = "信息")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flow", meta = (MultiLine="true"), DisplayName = "节点描述")
 	FText NodeDescription = FText::FromString(TEXT(""));
 
 
@@ -47,6 +47,9 @@ public:
 		FName PinName;
 	};
 	
-	TArray< PinInfoStruct> PinInfoArray;
+	TArray<PinInfoStruct> PinInfoArray;
+
+	
+	/*PinInfoStruct* GetAddOutput();*/
 #endif
 };
