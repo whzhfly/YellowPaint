@@ -3,7 +3,7 @@
 
 #include "Graph/YelloPaintSchema.h"
 #include "LogicFlowNode.h"
-
+/*#include "SCreatePinWindow.h"*/
 #define LOCTEXT_NAMESPACE "YPGraphSchema"
 
 
@@ -145,7 +145,59 @@ void UYelloPaintSchema::GetGraphContextActions(FGraphContextMenuBuilder& Context
 
 void UYelloPaintSchema::GetContextMenuActions(class UToolMenu* Menu, class UGraphNodeContextMenuContext* Context) const
 {
-	Super::GetContextMenuActions(Menu, Context);
+	if (Context)
+	{
+		FToolMenuSection& Section = Menu->AddSection(NAME_None, FText::FromString(TEXT("任务流程控制")));
+
+		UEdYellowPaintNode* EDFlowNode = Cast<UEdYellowPaintNode>(const_cast<UEdGraphNode*>(Context->Node.Get()));
+		if (EDFlowNode) {
+			{
+				FText DisplayLabel = FText::FromString(TEXT("其他"));
+				FText DisplayToolTips = FText::FromString(TEXT("其他"));
+				Section.AddSubMenu("Add Component", DisplayLabel, DisplayToolTips,
+					FNewMenuDelegate::CreateStatic(&UYelloPaintSchema::PopulateComponentMenu, EDFlowNode));
+			}
+			{
+				FText DisplayLabel = FText::FromString(TEXT("自动生成引脚"));
+				FText DisplayToolTips = FText::FromString(TEXT("针对某些特殊节点， 自动创建引脚"));
+				Section.AddMenuEntry("Auto Add Pin", DisplayLabel, DisplayToolTips, FSlateIcon(),
+					FUIAction(FExecuteAction::CreateStatic(&UYelloPaintSchema::AutoGenPinMenu, EDFlowNode))
+				);
+			}
+		}
+		Super::GetContextMenuActions(Menu, Context);
+	}
+}
+
+void UYelloPaintSchema::PopulateComponentMenu(FMenuBuilder& MenuBuilder, UEdYellowPaintNode* EDFlowNode)
+{
+	/*MenuBuilder.AddMenuEntry(defaultObj->GetPythonNodeTitle(), defaultObj->GetPythonNodeTitle(), FSlateIcon(),
+		FUIAction(
+			FExecuteAction::CreateLambda([StepNode, ChildClass]() {
+				UEdGraph* Graph = StepNode->GetGraph();
+				UQuestGraphNode_ComponentBase* OpNode = NewObject<UQuestGraphNode_ComponentBase>(Graph, UQuestGraphNode_ComponentBase::StaticClass());
+				OpNode->ComponentPythonBase = NewObject<UQuestComponentPythonBase>(OpNode, ChildClass, NAME_None);
+				StepNode->AddSubNode(OpNode, Graph);
+			}
+	)));*/
+}
+
+void UYelloPaintSchema::AutoGenPinMenu(UEdYellowPaintNode* EDFlowNode)
+{
+	if (EDFlowNode)
+	{
+		EDFlowNode->ReconstructNode();
+		TArray<UEdGraphPin*> AllPins = EDFlowNode->GetAllPins();
+		for (auto pin : AllPins)
+		{
+			if (pin->Direction == EGPD_Output)
+			{
+				EDFlowNode->RemovePin(pin);
+			}
+		}
+		EDFlowNode->AutoReFreshAPins();
+	}
+	EDFlowNode->GetGraph()->NotifyGraphChanged();
 }
 
 void UYelloPaintSchema::GetGraphDisplayInformation(const UEdGraph& Graph, FGraphDisplayInfo& DisplayInfo) const

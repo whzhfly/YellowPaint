@@ -23,6 +23,20 @@ public:
 	/** Classes to not allow any children of into the Class Viewer/Picker. */
 	TSet< const UClass* > AllowedChildrenOfClasses;
 
+	virtual void AutoAdjust()
+	{
+		TSet< const UClass* > NewAllowedChildrenOfClasses;
+		for (auto cls : AllowedChildrenOfClasses)
+		{
+			ULogicFlowDriverInstance* CDO = cls->GetDefaultObject<ULogicFlowDriverInstance>();
+			if (CDO->TemplateFlag)
+			{
+				NewAllowedChildrenOfClasses.Add(cls);
+			}
+		}
+		AllowedChildrenOfClasses = NewAllowedChildrenOfClasses;
+	}
+
 	virtual bool IsClassAllowed(const FClassViewerInitializationOptions& InInitOptions, const UClass* InClass, TSharedRef< FClassViewerFilterFuncs > InFilterFuncs) override
 	{
 		if (InClass != nullptr)
@@ -31,7 +45,15 @@ public:
 			{
 				if (InClass->IsChildOf(cls))
 				{
-					return  true;
+					ULogicFlowDriverInstance* CDO = InClass->GetDefaultObject<ULogicFlowDriverInstance>();
+					if (CDO->TemplateFlag)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
 				}
 			}
 		}
@@ -105,9 +127,16 @@ bool UYellowPaintEditorFactory::ConfigureProperties()
 	// Prevent creating blueprints of classes that require special setup (they'll be allowed in the corresponding factories / via other means)
 	TSharedPtr<FLGClassFilter> Filter = MakeShareable(new FLGClassFilter);
 	Filter->AllowedChildrenOfClasses.Add(ULogicFlowDriverInstance::StaticClass());
+	Filter->AutoAdjust();
 	
 	// option add
 	Options.ClassFilters.Add(Filter.ToSharedRef());
+
+	/*UUnrealEdOptions::FGetNewAssetDefaultClasses& Delegate = GUnrealEd->GetUnrealEdOptions()->OnGetNewAssetDefaultClasses();
+	Delegate.BindStatic(&UYellowPaintEditorFactory::GetPickerDefaultClasses);
+	*/
+
+	
 	const FText TitleText = LOCTEXT("CreateBlueprintOptions", "Pick Parent Class");
 	UClass* ChosenClass = nullptr;
 	const bool bPressedOk = SClassPickerDialog::PickClass(TitleText, Options, ChosenClass, UBlueprint::StaticClass());

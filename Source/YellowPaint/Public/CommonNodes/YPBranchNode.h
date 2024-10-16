@@ -9,70 +9,26 @@
 /**
  * 
  */
-UCLASS()
-class YELLOWPAINT_API UYPBranchNode : public ULogicFlowNode
+
+
+UCLASS(DisplayName="异步任务")
+class YELLOWPAINT_API UFlowAsyncNode : public ULogicFlowNode
 {
 	GENERATED_BODY()
-
-protected:
-	void OnEnter_Implementation() override;
-	
-	void OnExit_Implementation() override;
-
-public:
-
-	void CollectionAllocatePin_Implementation() override;
-	
-	UPROPERTY(EditAnywhere, Category="Flow", DisplayName="次数")
-	int ExeCount;
-};
-
-UCLASS()
-class YELLOWPAINT_API USequenceFlowNode : public ULogicFlowNode
-{
-	GENERATED_BODY()
-
-/*protected:
-	void OnEnter_Implementation() override;
-	
-	void OnExit_Implementation() override;*/
-
-public:
-
-	void CollectionAllocatePin_Implementation() override;
-};
-
-UCLASS()
-class YELLOWPAINT_API UYAsyncNode : public ULogicFlowNode
-{
-	GENERATED_BODY()
-
-protected:
-	void OnEnter_Implementation() override;
-	
-	void OnExit_Implementation() override;
-
-public:
-	void CollectionAllocatePin_Implementation() override;
-	
-public:
-	UPROPERTY(EditAnywhere, Category="Flow", DisplayName="异步")
-	bool HasBeenChecked;
 };
 
 
-UCLASS()
+UCLASS(DisplayName="开始")
 class YELLOWPAINT_API UFlowStartNode : public ULogicFlowNode
 {
 	GENERATED_BODY()
 
 public:
 	void CollectionAllocatePin_Implementation() override;
-
 	
 };
 
-UCLASS()
+UCLASS(DisplayName="结束")
 class YELLOWPAINT_API UFlowEndNode : public ULogicFlowNode
 {
 	GENERATED_BODY()
@@ -82,10 +38,9 @@ public:
 
 };
 
-UCLASS()
+UCLASS(DisplayName="检测")
 class YELLOWPAINT_API UFlowCheckNode : public ULogicFlowNode
 {
 	GENERATED_BODY()
-	
 
 };

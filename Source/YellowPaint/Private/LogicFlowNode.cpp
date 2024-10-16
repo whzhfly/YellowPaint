@@ -17,9 +17,14 @@ void ULogicFlowNode::OnExit_Implementation()
 	
 }
 
+
+//============================================ Editor Meta ========================================
+
+#if WITH_EDITOR
+
 FText ULogicFlowNode::GetNodeTitle_Implementation()
 {
-	return  FText::FromString(GetName());
+	return this->GetClass()->GetDisplayNameText();
 }
 
 void ULogicFlowNode::CollectionAllocatePin_Implementation()
@@ -33,3 +38,26 @@ void ULogicFlowNode::AddAllocatePin(EEdGraphPinDirection Dir, FName PinCategory,
 	PinInfoStruct PinInfo(Dir, PinCategory, PinName);
 	PinInfoArray.Add(PinInfo);
 }
+
+bool ULogicFlowNode::CanExtraAddPins_Implementation()
+{
+	return false;
+}
+
+void ULogicFlowNode::ExtraAddPins_Implementation()
+{
+}
+
+
+void ULogicFlowNode::RefreshPins_Implementation()
+{
+}
+
+
+void ULogicFlowNode::ReAutoGeneratePins()
+{
+	PinInfoArray.Empty();
+	RefreshPins();
+}
+
+#endif

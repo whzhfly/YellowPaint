@@ -42,5 +42,7 @@ public:
 	virtual FText GetFlowNodeTitleText() const;
 	// todo
 	virtual void AllocateDefaultPins();
+
+	virtual void AutoReFreshAPins();
 	
 };

@@ -49,7 +49,14 @@ void YPGraphInfoGenerator::Generate(const TArray<FAssetData> SelectedAssets)
 		auto jsonConverter = BpJsonConvert(QuestBP);
 		FString jsonStr = jsonConverter.ConvertToStr();
 		FString BPPath = UKismetSystemLibrary::GetSystemPath(QuestBP);
-		FFileHelper::SaveStringToFile(jsonStr, *FileName, FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM);
+		/*FFileHelper::SaveStringToFile(jsonStr, *FileName, FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM);*/
+
+
+		const FString SecondRootPath = FPaths::Combine(FPaths::ProjectDir(), TEXT("Script/universal/logic_flow/Data/"));
+
+		FString SecondFileName = SecondRootPath + QuestBP->GetName();
+		FFileHelper::SaveStringToFile(jsonStr, *SecondFileName, FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM);
+		
 		UE_LOG(LogTemp, Log, TEXT("Export %s To JSON %s"), *BPPath, *FileName);
 		
 	}

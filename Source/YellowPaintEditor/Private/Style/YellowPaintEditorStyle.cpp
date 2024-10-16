@@ -50,6 +50,9 @@ void FYellowPaintEditorStyle::Initialize()
 		StyleInstance->Set("ClassIcon.LogicFlowAsset", new IMAGE_BRUSH("Icons/FlowAsset_16x", Icon16));
 		StyleInstance->Set("ClassThumbnail.LogicFlowAsset", new IMAGE_BRUSH("Icons/FlowAsset_64x", Icon64));
 		
+		StyleInstance->Set("ClassIcon.LogicFlowDriverInstance", new IMAGE_BRUSH("Icons/FlowAsset_16x", Icon16));
+		StyleInstance->Set("ClassThumbnail.LogicFlowDriverInstance", new IMAGE_BRUSH("Icons/FlowAsset_64x", Icon64));
+		
 		StyleInstance->Set("Flow.Node.Title", new BOX_BRUSH("Icons/FlowNode_Title", FMargin(8.0f/64.0f, 0, 0, 0)));
 		StyleInstance->Set("Flow.Node.Body", new BOX_BRUSH("Icons/FlowNode_Body", FMargin(16.f/64.f)));
 		StyleInstance->Set("Flow.Node.ActiveShadow", new BOX_BRUSH("Icons/FlowNode_Shadow_Active", FMargin(18.0f/64.0f)));

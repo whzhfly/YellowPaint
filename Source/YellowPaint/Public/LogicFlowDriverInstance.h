@@ -34,14 +34,12 @@ public:
 	UPROPERTY(VisibleAnywhere, DisplayName="资源类型", Category="LogicFlow")
 	EFlowDriverType DriverType = EFlowDriverType::Default;
 
-	/*
-	UPROPERTY(EditAnywhere, DisplayName="是否激活Flow")
-	bool HasBeenChecked;
 
-	UPROPERTY(EditAnywhere, DisplayName="Flow次数")
-	int ExeCount;
-	*/
+	UPROPERTY(EditAnywhere, DisplayName="模板可被继承", AdvancedDisplay, meta=(ShowOnlyInnerProperties))
+	bool TemplateFlag = true;
 
+	UFUNCTION()
+	static bool IsTemplate(){ return false;};
 
 	UPROPERTY()
 	TMap<FString, ULogicFlowNode*> FlowNodesMap;

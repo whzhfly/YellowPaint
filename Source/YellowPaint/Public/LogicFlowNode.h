@@ -20,10 +20,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flow", meta = (MultiLine="true"), DisplayName = "节点描述")
 	FText NodeDescription = FText::FromString(TEXT(""));
 
-
-	UFUNCTION(BlueprintNativeEvent)
-	FText GetNodeTitle();
-
 	UFUNCTION(BlueprintNativeEvent)
 	void OnEnter();
 
@@ -33,12 +29,26 @@ public:
 
 #if WITH_EDITOR
 	// Pins OR Other
+	UFUNCTION(BlueprintNativeEvent)
+	FText GetNodeTitle();
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void CollectionAllocatePin();
 	
 	UFUNCTION(BlueprintCallable)
     void AddAllocatePin(EEdGraphPinDirection Dir, FName PinCategory, FName PinName);
+	
+	UFUNCTION(BlueprintCallable)
+	void ReAutoGeneratePins();
+
+	UFUNCTION(BlueprintNativeEvent)
+	bool CanExtraAddPins();
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void ExtraAddPins();
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void RefreshPins();
 
 	struct PinInfoStruct
 	{
@@ -49,7 +59,5 @@ public:
 	
 	TArray<PinInfoStruct> PinInfoArray;
 
-	
-	/*PinInfoStruct* GetAddOutput();*/
 #endif
 };

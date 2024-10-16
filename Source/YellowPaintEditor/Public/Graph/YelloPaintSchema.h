@@ -64,6 +64,8 @@ public:
 	UYelloPaintSchema(const FObjectInitializer& ObjectInitializer);
 
 
+	static void PopulateComponentMenu(FMenuBuilder& MenuBuilder, class UEdYellowPaintNode* EDFlowNode);
+	static void AutoGenPinMenu(class UEdYellowPaintNode* EDFlowNode);
 
 	virtual void GetGraphContextActions(FGraphContextMenuBuilder& ContextMenuBuilder) const override;
 	virtual void GetContextMenuActions(class UToolMenu* Menu, class UGraphNodeContextMenuContext* Context) const override;

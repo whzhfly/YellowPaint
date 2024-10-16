@@ -5,6 +5,7 @@
 
 
 
+/*
 void UYPBranchNode::OnEnter_Implementation()
 {
 	
@@ -46,14 +47,14 @@ void UYAsyncNode::CollectionAllocatePin_Implementation()
 	AddAllocatePin(EEdGraphPinDirection::EGPD_Input, TEXT("exec"), TEXT("In"));
 	AddAllocatePin(EEdGraphPinDirection::EGPD_Input, TEXT("int"), TEXT("Value"));
 	AddAllocatePin(EEdGraphPinDirection::EGPD_Output, TEXT("exec"), TEXT("Out"));
-}
+}*/
 
 void UFlowStartNode::CollectionAllocatePin_Implementation()
 {
-	AddAllocatePin(EEdGraphPinDirection::EGPD_Output, TEXT("exec"), TEXT("Out"));
+	AddAllocatePin(EEdGraphPinDirection::EGPD_Output, TEXT("exec"), TEXT("OUT"));
 }
 
 void UFlowEndNode::CollectionAllocatePin_Implementation()
 {
-	AddAllocatePin(EEdGraphPinDirection::EGPD_Input, TEXT("exec"), TEXT("In"));
+	AddAllocatePin(EEdGraphPinDirection::EGPD_Input, TEXT("exec"), TEXT("IN"));
 }

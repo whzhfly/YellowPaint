@@ -24,9 +24,19 @@ void UEdYellowPaintNode::AllocateDefaultPins()
 			CreatePin(pinInfo.Dir, pinInfo.PinCategory, pinInfo.PinName);
 		}
 	}
-	
 }
 
+
+void UEdYellowPaintNode::AutoReFreshAPins()
+{
+	if (FlowNode)
+	{
+		FlowNode->ReAutoGeneratePins();
+		for (auto pinInfo: FlowNode->PinInfoArray) {
+			CreatePin(pinInfo.Dir, pinInfo.PinCategory, pinInfo.PinName);
+		}
+	}
+}
 
 // =======================================
 FText UEdYellowPaintNode::GetNodeTitle(ENodeTitleType::Type TitleType) const
@@ -38,7 +48,11 @@ void UEdYellowPaintNode::AddUserOutput()
 {
 	if (FlowNode.Get())
 	{
-		CreatePin(EGPD_Output, TEXT("Narrator"), TEXT("11"));
+		FlowNode->PinInfoArray.Empty();
+		FlowNode.Get()->ExtraAddPins();
+		for (auto pinInfo: FlowNode->PinInfoArray) {
+			CreatePin(pinInfo.Dir, pinInfo.PinCategory, pinInfo.PinName);
+		}
 	}
 	GetGraph()->NotifyGraphChanged();
 }
@@ -57,7 +71,7 @@ bool UEdYellowPaintNode::CanUserAddOutput() const
 {
 	if (FlowNode.Get())
 	{
-		return true;
+		return FlowNode.Get()->CanExtraAddPins();;
 	}
 	return false;
 }
