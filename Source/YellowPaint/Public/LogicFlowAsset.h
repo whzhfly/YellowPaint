@@ -47,4 +47,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "LogicFlow")
 	TObjectPtr<ULogicFlowDriverInstance> FlowInstance;
+
+	UFUNCTION(BlueprintCallable)
+	EFlowDriverType GetAssetType();
+	
 };

@@ -47,11 +47,20 @@ void FYellowPaintEditorStyle::Initialize()
 		
 		// StyleInstance->SetContentRoot(IPluginManager::Get().FindPlugin(TEXT("Flow"))->GetBaseDir() / TEXT("Resources"));
 
-		StyleInstance->Set("ClassIcon.LogicFlowAsset", new IMAGE_BRUSH("Icons/FlowAsset_16x", Icon16));
-		StyleInstance->Set("ClassThumbnail.LogicFlowAsset", new IMAGE_BRUSH("Icons/FlowAsset_64x", Icon64));
+		StyleInstance->Set("ClassIcon.LogicFlowAsset", new IMAGE_BRUSH("Icons/Thought_16x", Icon16));
+		StyleInstance->Set("ClassThumbnail.LogicFlowAsset", new IMAGE_BRUSH("Icons/Thought_64x", Icon64));
 		
-		StyleInstance->Set("ClassIcon.LogicFlowDriverInstance", new IMAGE_BRUSH("Icons/FlowAsset_16x", Icon16));
-		StyleInstance->Set("ClassThumbnail.LogicFlowDriverInstance", new IMAGE_BRUSH("Icons/FlowAsset_64x", Icon64));
+		StyleInstance->Set("ClassIcon.LogicFlowDriverInstance", new IMAGE_BRUSH("Icons/FlowAsset_64x", Icon16));
+		StyleInstance->Set("ClassThumbnail.LogicFlowDriverInstance", new IMAGE_BRUSH("Icons/FlowAsset_16x", Icon64));
+
+		StyleInstance->Set("ClassIcon.LogicSkillFlowDriver", new IMAGE_BRUSH("Icons/Skill_16x", Icon16));
+        StyleInstance->Set("ClassThumbnail.LogicSkillFlowDriver", new IMAGE_BRUSH("Icons/Skill_64x", Icon64));
+
+		StyleInstance->Set("ClassIcon.LogicTriggerFlowDriver", new IMAGE_BRUSH("Icons/Trigger_64x", Icon16));
+		StyleInstance->Set("ClassThumbnail.LogicTriggerFlowDriver", new IMAGE_BRUSH("Icons/Trigger_16x", Icon64));
+
+		StyleInstance->Set("ClassIcon.LogicBuffFlowDriver", new IMAGE_BRUSH("Icons/Buff_16x", Icon16));
+		StyleInstance->Set("ClassThumbnail.LogicBuffFlowDriver", new IMAGE_BRUSH("Icons/Buff_64x", Icon64));
 		
 		StyleInstance->Set("Flow.Node.Title", new BOX_BRUSH("Icons/FlowNode_Title", FMargin(8.0f/64.0f, 0, 0, 0)));
 		StyleInstance->Set("Flow.Node.Body", new BOX_BRUSH("Icons/FlowNode_Body", FMargin(16.f/64.f)));

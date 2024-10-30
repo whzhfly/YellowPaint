@@ -3,6 +3,7 @@
 
 #include "Graph/YelloPaintSchema.h"
 #include "LogicFlowNode.h"
+#include "LogicFlowAsset.h"
 /*#include "SCreatePinWindow.h"*/
 #define LOCTEXT_NAMESPACE "YPGraphSchema"
 
@@ -126,13 +127,31 @@ void UYelloPaintSchema::GetGraphContextActions(FGraphContextMenuBuilder& Context
 			}
 			UObject* DefaultObject = ChildClass->GetDefaultObject();
 			ULogicFlowNode* defaultObj = CastChecked<ULogicFlowNode>(DefaultObject);
+
+			ULogicFlowAsset* FlowAsset = CastChecked<ULogicFlowAsset>(outer);
+			if (FlowAsset)
+			{
+				if (FlowAsset->FlowInstance)
+				{
+					if (!defaultObj->CheckAssetEnable(FlowAsset->GetAssetType()))
+					{
+						continue;
+					}
+				}
+			}
 			//检查节点是否能在当前图使用
 			/*if (defaultObj->GetPythonNodeTitle().EqualTo(FText::GetEmpty())) continue; //有些界面没名字*/
 			/*if (bIsLevelQuest && defaultObj->QuestNodeType == EQuestNodeType::USE_IN_MAIN_SCENE) continue;*/
 			/*if (!bIsLevelQuest && defaultObj->QuestNodeType == EQuestNodeType::USE_IN_EXPLORE_LEVEL) continue;*/
+			FText CategoryKey = FText::GetEmpty();
+			FString DisplayName = defaultObj->GetClass()->GetMetaData("ClassGroup");
+			if (!DisplayName.IsEmpty())
+			{
+				CategoryKey = FText::FromString(DisplayName);
+			}
 			TSharedPtr<FYellowPaintSchemaAction_NewNode> AddAction = UYelloPaintSchema::AddNewNodeAction(
 				ActionGraphActionBuilder,
-				FText::GetEmpty(),
+				CategoryKey,
 				defaultObj->GetNodeTitle(),
 				FText::GetEmpty());
 			UEdYellowPaintNode* Node = NewObject<UEdYellowPaintNode>(ContextMenuBuilder.OwnerOfTemporaries, UEdYellowPaintNode::StaticClass());

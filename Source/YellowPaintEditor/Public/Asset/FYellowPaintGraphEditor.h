@@ -37,6 +37,8 @@ protected:
 	// User Define ========================================
 
 	virtual void AddBlueprintLGOtherToolBar(UToolMenu* InMenu);
+
+	virtual void FocusInspectorOnGraphSelection(const TSet<class UObject*>& NewSelection, bool bForceRefresh = false);
 	
 	/** Called when Compile button is clicked */
     virtual void ExportJSON();

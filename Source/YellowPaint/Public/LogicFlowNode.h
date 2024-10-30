@@ -7,6 +7,23 @@
 #include "EdGraph/EdGraphNode.h"
 #include "LogicFlowNode.generated.h"
 
+
+
+/** Enum used to define which way data flows into or out of this pin. */
+UENUM(BlueprintType)
+enum class EFlowDriverType
+{
+	Default = 0 UMETA(DisplayName = "默认"),
+	Skill = 1 UMETA(DisplayName = "技能"),
+	Buff = 2 UMETA(DisplayName = "Buff"),
+	Trigger = 3 UMETA(DisplayName = "触发器"),
+	Other = 9 UMETA(DisplayName = "其他"),
+};
+
+
+/*
+class EFlowDriverType;*/
+
 /**
  * 
  */
@@ -22,7 +39,9 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void OnEnter();
-
+	
+	UFUNCTION(BlueprintNativeEvent)
+	bool CheckAssetEnable(EFlowDriverType DriveAsset);
 	
 	UFUNCTION(BlueprintNativeEvent)
 	void OnExit();

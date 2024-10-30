@@ -8,7 +8,8 @@
 
 
 
-/** Enum used to define which way data flows into or out of this pin. */
+/*
+/** Enum used to define which way data flows into or out of this pin. #1#
 UENUM(BlueprintType)
 enum class EFlowDriverType
 {
@@ -18,6 +19,7 @@ enum class EFlowDriverType
 	Trigger = 3 UMETA(DisplayName = "触发器"),
 	Other = 9 UMETA(DisplayName = "其他"),
 };
+*/
 
 
 /**
@@ -31,12 +33,21 @@ class YELLOWPAINT_API ULogicFlowDriverInstance : public UObject
 public:
 	GENERATED_BODY()
 
+	ULogicFlowDriverInstance(const class FObjectInitializer& ObjectInitializer);
+
+	virtual void InitAsset(); // 应该用virtual static function 去解决 
+
 	UPROPERTY(VisibleAnywhere, DisplayName="资源类型", Category="LogicFlow")
 	EFlowDriverType DriverType = EFlowDriverType::Default;
 
+	/*UFUNCTION()	
+	static EFlowDriverType GetDriverInstanceType();*/
 
-	UPROPERTY(EditAnywhere, DisplayName="模板可被继承", AdvancedDisplay, meta=(ShowOnlyInnerProperties))
+	UPROPERTY(EditAnywhere, DisplayName="模板可被继承", Category="LogicFlow", AdvancedDisplay, meta=(ShowOnlyInnerProperties))
 	bool TemplateFlag = true;
+
+	UPROPERTY(EditAnywhere, DisplayName="资源描述", Category="LogicFlow")
+	FText AssetDesc;
 
 	UFUNCTION()
 	static bool IsTemplate(){ return false;};
@@ -48,4 +59,32 @@ public:
 	virtual void StartFlow();
 	
 	virtual void DeepCopyFormAnother(ULogicFlowDriverInstance* Instance);
+};
+
+
+UCLASS(Blueprintable, BlueprintType)
+class YELLOWPAINT_API ULogicSkillFlowDriver : public ULogicFlowDriverInstance
+{
+	GENERATED_BODY()
+
+	ULogicSkillFlowDriver(const class FObjectInitializer& ObjectInitializer);
+	
+};
+
+UCLASS(Blueprintable, BlueprintType)
+class YELLOWPAINT_API ULogicBuffFlowDriver : public ULogicFlowDriverInstance
+{
+	GENERATED_BODY()
+
+	ULogicBuffFlowDriver(const class FObjectInitializer& ObjectInitializer);
+	
+
+};
+
+UCLASS(Blueprintable, BlueprintType)
+class YELLOWPAINT_API ULogicTriggerFlowDriver : public ULogicFlowDriverInstance
+{
+	GENERATED_BODY()
+
+	ULogicTriggerFlowDriver(const class FObjectInitializer& ObjectInitializer);
 };

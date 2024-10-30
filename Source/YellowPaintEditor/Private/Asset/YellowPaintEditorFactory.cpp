@@ -11,6 +11,7 @@
 #include "Preferences/UnrealEdOptions.h"
 #include "Engine/BlueprintGeneratedClass.h"
 #include "Kismet2/KismetEditorUtilities.h"
+#include "YellowPaintGeneratedClass.h"
 
 
 #define LOCTEXT_NAMESPACE "YellowPaintEditorFactory"
@@ -79,19 +80,21 @@ UYellowPaintEditorFactory::UYellowPaintEditorFactory()
 {
 	SupportedClass = ULogicFlowAsset::StaticClass();
 	ParentClass = ULogicFlowDriverInstance::StaticClass();
+	SelectDriverClass = ULogicFlowDriverInstance::StaticClass();
 	bCreateNew = true;
 	bEditAfterNew = true;
 }
 
+
 UObject* UYellowPaintEditorFactory::FactoryCreateNew(UClass* Class, UObject* InParent, FName Name, EObjectFlags Flags, UObject* Context, FFeedbackContext* Warn, FName CallingContext)
 {
 	// ULogicFlowAsset ->
-	if (!ParentClass)
+	if (!SelectDriverClass)
 	{
 		return nullptr;
 	}
 	check(Class->IsChildOf(ULogicFlowAsset::StaticClass()));
-	auto ypGraphBP = CastChecked<ULogicFlowAsset>(FKismetEditorUtilities::CreateBlueprint(ParentClass, InParent, Name, BPTYPE_Normal, ULogicFlowAsset::StaticClass(), UBlueprintGeneratedClass::StaticClass(), CallingContext));
+	auto ypGraphBP = CastChecked<ULogicFlowAsset>(FKismetEditorUtilities::CreateBlueprint(SelectDriverClass, InParent, Name, BPTYPE_Normal, ULogicFlowAsset::StaticClass(), UYellowPaintGeneratedClass::StaticClass(), CallingContext));
 	return ypGraphBP;
 }
 
@@ -104,7 +107,7 @@ bool UYellowPaintEditorFactory::ConfigureProperties()
 {
 	/*return  true;*/
 	// Null the parent class to ensure one is selected
-	ParentClass = nullptr;
+	SelectDriverClass = nullptr;
 
 	// Fill in options
 	FClassViewerInitializationOptions Options;
@@ -126,25 +129,20 @@ bool UYellowPaintEditorFactory::ConfigureProperties()
 
 	// Prevent creating blueprints of classes that require special setup (they'll be allowed in the corresponding factories / via other means)
 	TSharedPtr<FLGClassFilter> Filter = MakeShareable(new FLGClassFilter);
-	Filter->AllowedChildrenOfClasses.Add(ULogicFlowDriverInstance::StaticClass());
+	Filter->AllowedChildrenOfClasses.Add(ParentClass);
 	Filter->AutoAdjust();
 	
 	// option add
 	Options.ClassFilters.Add(Filter.ToSharedRef());
-
-	/*UUnrealEdOptions::FGetNewAssetDefaultClasses& Delegate = GUnrealEd->GetUnrealEdOptions()->OnGetNewAssetDefaultClasses();
-	Delegate.BindStatic(&UYellowPaintEditorFactory::GetPickerDefaultClasses);
-	*/
-
 	
 	const FText TitleText = LOCTEXT("CreateBlueprintOptions", "Pick Parent Class");
 	UClass* ChosenClass = nullptr;
 	const bool bPressedOk = SClassPickerDialog::PickClass(TitleText, Options, ChosenClass, UBlueprint::StaticClass());
 	if (bPressedOk)
 	{
-		ParentClass = ChosenClass;
+		SelectDriverClass = ChosenClass;
 
-		FEditorDelegates::OnFinishPickingBlueprintClass.Broadcast(ParentClass);
+		FEditorDelegates::OnFinishPickingBlueprintClass.Broadcast(SelectDriverClass);
 	}
 
 	return bPressedOk;
@@ -185,5 +183,43 @@ FText UYellowPaintEditorFactory::GetDisplayName() const
 	return LOCTEXT("AbilityDriver", "LogicFlow Asset");
 }
 
+// ================================= Child Override ================================
+
+USkillEditorFactory::USkillEditorFactory():
+Super()
+{
+	ParentClass = ULogicSkillFlowDriver::StaticClass();
+	SelectDriverClass = ULogicSkillFlowDriver::StaticClass();
+}
+
+
+FText USkillEditorFactory::GetDisplayName() const
+{
+	return LOCTEXT("AbilityDriver", "Skill Asset");
+}
+
+UBuffEditorFactory::UBuffEditorFactory():
+Super()
+{
+	ParentClass = ULogicBuffFlowDriver::StaticClass();
+	SelectDriverClass = ULogicBuffFlowDriver::StaticClass();
+}
+
+FText UBuffEditorFactory::GetDisplayName() const
+{
+	return LOCTEXT("AbilityDriver", "Buff Asset");
+}
+
+UTriggerEditorFactory::UTriggerEditorFactory():
+Super()
+{
+	ParentClass = ULogicTriggerFlowDriver::StaticClass();
+	SelectDriverClass = ULogicTriggerFlowDriver::StaticClass();
+}
+
+FText UTriggerEditorFactory::GetDisplayName() const
+{
+	return LOCTEXT("AbilityDriver", "Trigger Asset");
+}
 
 #undef LOCTEXT_NAMESPACE

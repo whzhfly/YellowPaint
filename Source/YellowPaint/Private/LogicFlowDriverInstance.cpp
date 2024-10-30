@@ -5,6 +5,17 @@
 
 
 
+ULogicFlowDriverInstance::ULogicFlowDriverInstance(const FObjectInitializer& ObjectInitializer):
+	Super(ObjectInitializer)
+{
+}
+
+void ULogicFlowDriverInstance::InitAsset()
+{
+	
+}
+
+
 void ULogicFlowDriverInstance::DeepCopyFormAnother(ULogicFlowDriverInstance* Instance)
 {
 	if (Instance != nullptr)
@@ -22,3 +33,22 @@ void ULogicFlowDriverInstance::StartFlow()
 {
 	
 }
+
+ULogicSkillFlowDriver::ULogicSkillFlowDriver(const FObjectInitializer& ObjectInitializer):
+	Super(ObjectInitializer)
+{
+	DriverType = EFlowDriverType::Skill;
+}
+
+ULogicBuffFlowDriver::ULogicBuffFlowDriver(const FObjectInitializer& ObjectInitializer):
+	Super(ObjectInitializer)
+{
+	DriverType = EFlowDriverType::Buff;
+}
+
+ULogicTriggerFlowDriver::ULogicTriggerFlowDriver(const FObjectInitializer& ObjectInitializer):
+	Super(ObjectInitializer)
+{
+	DriverType = EFlowDriverType::Trigger;
+}
+

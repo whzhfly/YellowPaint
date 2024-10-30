@@ -15,6 +15,8 @@ UCLASS(DisplayName="异步任务")
 class YELLOWPAINT_API UFlowAsyncNode : public ULogicFlowNode
 {
 	GENERATED_BODY()
+
+	bool CheckAssetEnable_Implementation(EFlowDriverType DriveAsset) override;
 };
 
 
@@ -36,11 +38,15 @@ class YELLOWPAINT_API UFlowEndNode : public ULogicFlowNode
 public:
 	void CollectionAllocatePin_Implementation() override;
 
+	bool CheckAssetEnable_Implementation(EFlowDriverType DriveAsset) override;
+
 };
 
 UCLASS(DisplayName="检测")
 class YELLOWPAINT_API UFlowCheckNode : public ULogicFlowNode
 {
 	GENERATED_BODY()
+
+	bool CheckAssetEnable_Implementation(EFlowDriverType DriveAsset) override;
 
 };

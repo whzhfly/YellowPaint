@@ -271,26 +271,54 @@ void FYellowPaintGraphEditor::OnSelectedNodesChangedImpl(const TSet<class UObjec
 	}
 
 
-	FBlueprintEditor::OnSelectedNodesChangedImpl(NewSelection);
+	/*FBlueprintEditor::OnSelectedNodesChangedImpl(NewSelection);*/
 }
 
+void FYellowPaintGraphEditor::FocusInspectorOnGraphSelection(const FGraphPanelSelectionSet& NewSelection, bool bForceRefresh)
+{
+	// If this graph has selected nodes update the details panel to match.
+
+	TSet<UObject*> TempSelection;
+	for (auto Obj : NewSelection)
+	{
+		if (UEdYellowPaintNode* GraphNode = Cast<UEdYellowPaintNode>(Obj))
+		{
+			TempSelection.Add(GraphNode->FlowNode);
+		}
+		else
+		{
+			TempSelection.Add(Obj);
+		}
+	}
+	/*if ( NewSelection.Num() > 0 || CurrentUISelection == FBlueprintEditor::SelectionState_Graph )
+	{
+		SetUISelectionState(FBlueprintEditor::SelectionState_Graph);
+
+		SKismetInspector::FShowDetailsOptions ShowDetailsOptions;
+		ShowDetailsOptions.bForceRefresh = bForceRefresh;
+
+		Inspector->ShowDetailsForObjects(NewSelection.Array(), ShowDetailsOptions);
+	}*/
+	FBlueprintEditor::FocusInspectorOnGraphSelection(TempSelection, bForceRefresh);
+}
 
 FGraphAppearanceInfo FYellowPaintGraphEditor::GetGraphAppearance(UEdGraph* InGraph) const
 {
 	FGraphAppearanceInfo BPInfo = FBlueprintEditor::GetGraphAppearance(InGraph);
-	// BPInfo.CornerText =  FText::FromString(TEXT("🍌逻辑编辑器🤖🍇🍉🍍🍓"));
-	BPInfo.CornerText =  FText::FromString(TEXT("🤖Flow"));
-	/*UQuestGraph* MaybeQuestGraph = Cast<UQuestGraph>(InGraph);*/
-	/*UObject* outer = MaybeQuestGraph->GetOuter();
-	UBlueprint* BP = CastChecked<UBlueprint>(outer);*/
-	/*if (BP->ParentClass == ULevelQuestLogicBase::StaticClass()) {
-		BPInfo.CornerText = FText::FromString(TEXT("关卡任务编辑器🤖"));
+	BPInfo.CornerText = FText::FromString(TEXT("🤖Flow"));
+	UObject* outer = InGraph->GetOuter();
+	UBlueprint* BP = CastChecked<UBlueprint>(outer);
+	if (Cast<ULogicSkillFlowDriver>(BP->ParentClass->GetDefaultObject())) {
+		BPInfo.CornerText = FText::FromString(TEXT("技能编辑器🍉"));
 	}
-	else if (BP->ParentClass == UCaseQuestLogicBase::StaticClass()) {
-		BPInfo.CornerText = FText::FromString(TEXT("CASE编辑器📒"));
+	else if (Cast<ULogicBuffFlowDriver>(BP->ParentClass->GetDefaultObject())) {
+		BPInfo.CornerText = FText::FromString(TEXT("Buff编辑器🍍"));
 	}
-	else if (BP->ParentClass == UQuestLogicBase::StaticClass()) {
-		BPInfo.CornerText = FText::FromString(TEXT("任务编辑器🕹"));
+	else if (Cast<ULogicTriggerFlowDriver>(BP->ParentClass->GetDefaultObject())) {
+		BPInfo.CornerText = FText::FromString(TEXT("触发器编辑器🍓"));
+	}
+	/*else if (BP->ParentClass == ULogicTriggerFlowDriver::StaticClass()) {
+		BPInfo.CornerText = FText::FromString(TEXT("触发器编辑器🍓"));
 	}*/
 	return BPInfo;
 }

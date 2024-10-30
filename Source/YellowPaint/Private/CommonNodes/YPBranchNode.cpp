@@ -58,3 +58,18 @@ void UFlowEndNode::CollectionAllocatePin_Implementation()
 {
 	AddAllocatePin(EEdGraphPinDirection::EGPD_Input, TEXT("exec"), TEXT("IN"));
 }
+
+bool UFlowCheckNode::CheckAssetEnable_Implementation(EFlowDriverType DriveAsset)
+{
+	return false;
+}
+
+bool UFlowAsyncNode::CheckAssetEnable_Implementation(EFlowDriverType DriveAsset)
+{
+	return false;
+}
+
+bool UFlowEndNode::CheckAssetEnable_Implementation(EFlowDriverType DriveAsset)
+{
+	return false;
+}

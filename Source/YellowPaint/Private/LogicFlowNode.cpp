@@ -2,6 +2,7 @@
 
 
 #include "LogicFlowNode.h"
+#include "LogicFlowDriverInstance.h"
 
 
 
@@ -15,6 +16,11 @@ void ULogicFlowNode::OnEnter_Implementation()
 void ULogicFlowNode::OnExit_Implementation()
 {
 	
+}
+
+bool ULogicFlowNode::CheckAssetEnable_Implementation(EFlowDriverType DriveAsset)
+{
+	return true;
 }
 
 
