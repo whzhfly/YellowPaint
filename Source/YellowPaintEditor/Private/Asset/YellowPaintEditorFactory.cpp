@@ -27,15 +27,33 @@ public:
 	virtual void AutoAdjust()
 	{
 		TSet< const UClass* > NewAllowedChildrenOfClasses;
+
+
 		for (auto cls : AllowedChildrenOfClasses)
 		{
-			ULogicFlowDriverInstance* CDO = cls->GetDefaultObject<ULogicFlowDriverInstance>();
+			/*ULogicFlowDriverInstance* CDO = cls->GetDefaultObject<ULogicFlowDriverInstance>();
 			if (CDO->TemplateFlag)
 			{
 				NewAllowedChildrenOfClasses.Add(cls);
+			}*/
+
+			// do once
+			TArray<UClass*> Subclasses;
+			GetDerivedClasses(cls, Subclasses, true);
+			for (auto SubCls: Subclasses)
+			{
+				ULogicFlowDriverInstance* CDO = SubCls->GetDefaultObject<ULogicFlowDriverInstance>();
+				if (CDO)
+				{
+					if (CDO->TemplateFlag)
+					{
+						NewAllowedChildrenOfClasses.Add(SubCls);
+					}
+				}
 			}
+			break;
 		}
-		AllowedChildrenOfClasses = NewAllowedChildrenOfClasses;
+		/*AllowedChildrenOfClasses = NewAllowedChildrenOfClasses;*/
 	}
 
 	virtual bool IsClassAllowed(const FClassViewerInitializationOptions& InInitOptions, const UClass* InClass, TSharedRef< FClassViewerFilterFuncs > InFilterFuncs) override
@@ -113,7 +131,8 @@ bool UYellowPaintEditorFactory::ConfigureProperties()
 	FClassViewerInitializationOptions Options;
 	Options.Mode = EClassViewerMode::ClassPicker;
 	Options.DisplayMode = EClassViewerDisplayMode::TreeView;
-	Options.bShowObjectRootClass = true;
+	Options.bShowObjectRootClass = false;
+	Options.bExpandAllNodes = true;
 
 	// Only want blueprint actor base classes.
 	Options.bIsBlueprintBaseOnly = false;
